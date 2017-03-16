@@ -2,8 +2,8 @@
 
 <img src="public/img/pixiv-logo.png" width="50%">
 
-爬取目标网站：http://www.pixiv.net/
-本网站：http://www.izetta.cn/ (暂定)
+* 爬取目标网站：http://www.pixiv.net/
+* 本网站：http://www.izetta.cn/ (暂定)
 
 ***
 
@@ -24,7 +24,7 @@
 3. 下载
 	1. 下载：`POST /download`
 
-路由设计采用`REST`风格
+> 路由设计采用`REST`风格
 
 ## Lincense
 MIT
