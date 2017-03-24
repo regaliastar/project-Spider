@@ -1,9 +1,14 @@
 # project-Spider
 
+<p align="left">
+	<img alt="" src="https://img.shields.io/badge/JavaScript-ES6-green.svg" />
+	<img alt="MIT" src="https://img.shields.io/npm/l/express.svg" />
+</p>
+
 <img src="public/img/pixiv-logo.png" width="50%">
 
-* 爬取目标网站：http://www.pixiv.net/
-* 本网站：http://www.izetta.cn/ (未开放)
+* 爬取目标网站：[P站：pixiv.com](http://www.pixiv.net/)
+* 本网站：[未开放](http://www.izetta.cn/)
 
 ***
 

@@ -1,3 +1,6 @@
+/**
+ *传入任意个字符串，将其按空格分开，并按时间作为文件名写在logs目录下
+ */
 var fs = require('fs');
 
 function log(){
