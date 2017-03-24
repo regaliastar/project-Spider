@@ -3,7 +3,7 @@
 <img src="public/img/pixiv-logo.png" width="50%">
 
 * 爬取目标网站：http://www.pixiv.net/
-* 本网站：http://www.izetta.cn/ (暂定)
+* 本网站：http://www.izetta.cn/ (未开放)
 
 ***
 
