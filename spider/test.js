@@ -1,3 +1,6 @@
+/**
+ *用于测试spider部分函数
+ */
 var fetch = require('./fetch');
 
 var getId = (function(){
