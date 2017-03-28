@@ -13,7 +13,7 @@
 ***
 
 ## 特点
-* 前端 bootstrape+JQuery 重写
+* 前端 bootstrape+JQuery+vue.js 重写
 * 后端 nodejs+express+mongodb+request+cheerio 重写
 * 伪造请求头，模拟用户登录，解决图片防盗链问题
 * 提供搜索与下载功能！
