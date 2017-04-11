@@ -2,8 +2,9 @@
  *用于测试spider部分函数
  */
 var fetch = require('./fetch');
+var User = require('./User');
 
-var getId = (function(){
+/*var getId = (function(){
 	var url = 'http://www.pixiv.net/member.php?id=1184799';
 
 	return function(){
@@ -12,6 +13,7 @@ var getId = (function(){
 			console.log(ID);
 		});
 	}
-})();
+})();*/
 
-getId();
+//getId();
+User.getUser('1184799');
