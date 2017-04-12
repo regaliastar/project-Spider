@@ -1,5 +1,5 @@
 /**
- *create by regaliastar on 3/26
+ *created by regaliastar on 3/26
  *
  *用于得到P站所有用户的信息，并保存在文件或数据库中
  */
