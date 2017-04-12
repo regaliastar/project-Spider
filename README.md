@@ -32,7 +32,7 @@
 > 路由设计采用`REST`风格
 
 ## 如何使用
-1. 安装nodejs,mongodb
+1. 安装 `nodejs` `mongodb`
 2. 在根目录下 `npm install`,再 `node app`
 3. 服务器于 `http://127.0.0.1:3000/` 监听
 

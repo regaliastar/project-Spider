@@ -6,10 +6,10 @@
  */
 
 var request = require('request'),
-fs = require('fs'),
-cheerio = require('cheerio'),
-log = require('./../log'),
-createHeader = require('./requestHeader');
+	fs = require('fs'),
+	cheerio = require('cheerio'),
+	log = require('./../log'),
+	createHeader = require('./requestHeader');
 
 var fetch = function(url,callback){
 	var header = createHeader(url);
