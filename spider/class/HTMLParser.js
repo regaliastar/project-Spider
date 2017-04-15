@@ -34,6 +34,33 @@ HTMLParser.parsePixiver = function(ID,callback){
 }
 
 /**
+ *用来初始化一些parseWork与parseMutilWork都需要用到的变量
+ */
+HTMLParser.initWork = function($,callback){
+    var Util = {},
+        tags = [],  //TAG
+        pageView,   //浏览量
+        praise,     //点赞数
+        pixiver;    //作者
+
+    Util['pixiver'] = $('.user-link').first().attr('href').split('=')[1];
+    Util['pageView'] = $('.view-count').text() || '0';
+    Util['praise'] = $('.rated-count').text() || '0';
+    var tag_length = $('.tags').children().length;
+    $('.tags').children().each(function(){
+        let tag = $(this).children('.text').text();
+        tag_length --;
+        if(tag){
+            tags.push(tag);
+        }
+        if(!tag_length){
+            Util['tags'] = tags;
+            callback(Util);
+        }
+    });
+}
+
+/**
  *url format:http://www.pixiv.net/member_illust.php?id=2482417
  *传入作品URL，得到作品的名字、浏览量、作者、标签、下载地址的信息（原图及缩率图），传给回调函数
  *
@@ -43,34 +70,54 @@ HTMLParser.parseWork = function(url,callback){
     var header = require('./../requestHeader')(url);
     HTMLParser.fetch(header,function($){
         var workName,   //作品名
-            tags = [],  //TAG
-            pageView,   //浏览量
-            praise,     //点赞数
-            pixiver,    //作者
             small_address,  //小图地址
             big_address;    //大图地址
 
-            pixiver = $('.user-link').first().attr('href').split('=')[1];
-            big_address = $('img[class=original-image]').attr('data-src');
-            small_address = $('._layout-thumbnail').children().first().attr('src');
-            var array = small_address.split('/');
-            workName = array[array.length - 1];
-            pageView = $('.view-count').text();
-            praise = $('.rated-count').text();
-            var tag_length = $('.tags').children().length;
-            $('.tags').children().each(function(){
-                let tag = $(this).children('.text').text();
-                tag_length --;
-                if(tag){
-                    tags.push(tag);
-                }
-                if(!tag_length){
-                    var Work = require('./Work');
-                    var w = new Work(workName,tags,pageView,praise,pixiver,small_address,big_address);
-                    callback(w);
-                }
-            });
+        big_address = $('img[class=original-image]').attr('data-src');
+        small_address = $('._layout-thumbnail').children().first().attr('src');
+        var array = small_address.split('/');
+        workName = array[array.length - 1];
+        HTMLParser.initWork($,function(Util){
+            var Work = require('./Work').Work;
+            var w = new Work(workName,Util['tags'],Util['pageView'],Util['praise'],Util['pixiver'],small_address,big_address);
+            callback(w);
+        })
+    })
+}
 
+/**
+ *url format:http://www.pixiv.net/member_illust.php?mode=medium&illust_id=60909471
+ *
+ *用来处理parseWork无法处理的漫画
+ */
+HTMLParser.parseMutilWork = function(url,callback){
+    var header = require('./../requestHeader')(url);
+    HTMLParser.fetch(header,function($){
+        var tags = [],          //TAG
+            box_address = [],   //数组变量，用于存放每一张漫画的地址
+            next;               //存放所有画的页面
+
+        var small_address = $('._layout-thumbnail').children('img').attr('src');    //小图地址
+        var big_address = small_address;                                            //大图地址
+        var array = small_address.split('/');
+        var workName = array[array.length - 1];
+        next = 'http://www.pixiv.net/'+$('._work.multiple').first().attr('href');
+
+        HTMLParser.initWork($,function(Util){
+            header = require('./../requestHeader')(next);
+            HTMLParser.fetch(header,function($){
+                var item_length = $('.item-container').length;
+                $('.item-container').each(function(i,item){
+                    box_address.push($(this).children('.image').attr('data-src'));
+                    item_length--;
+                    if(!item_length){
+                        var MutilWork = require('./Work').MutilWork;
+                        var mw = new MutilWork(workName,Util['tags'],Util['pageView'],Util['praise'],Util['pixiver'],small_address,big_address,box_address);
+                        callback(mw);
+                    }
+                });
+            })
+        })
     })
 }
 
