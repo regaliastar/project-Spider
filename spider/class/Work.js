@@ -1,0 +1,20 @@
+'use strict';
+
+class Work{
+    constructor(workName,tags,pageView,praise,pixiver,small_address,big_address){
+        this.workName = workName;   //作品名
+        this.tags = tags;           //TAG
+        this.pageView = pageView;   //浏览量
+        this.praise = praise;       //点赞数
+        this.pixiver = pixiver;     //作者
+        this.small_address = small_address; //小图地址
+        this.big_address = big_address;     //大图地址
+    }
+}
+
+Work.prototype.print = function(){
+    console.log(this.workName,this.tags.join(','),this.pageView,this.praise,
+                this.pixiver,this.small_address,this.big_address);
+}
+
+module.exports = Work;

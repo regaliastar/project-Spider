@@ -1,20 +1,17 @@
-'user strict';
-
-class HTMLParser{
-    /**
-     *该类不能使用构造函数
-     */
-    constructor(){
-        throw new Error('HTMLParser could not be a constructor');
-    };
-}
-
-
+'use strict';
 /**
  *created by regaliastar on 4/15
  *
  *解析页面HTML元素
  */
+class HTMLParser{
+    /**
+     *该类禁止使用构造函数
+     */
+    constructor(){
+        throw new Error('HTMLParser could not be a constructor');
+    };
+}
 
 /**
  *ID format: '1184799';
@@ -29,10 +26,51 @@ HTMLParser.parsePixiver = function(ID,callback){
 
     HTMLParser.fetch(seed,function($){
         var children_list = $('.count-container').children();
-        bookmarket = children_list.eq(0).children('a:first-child').text() || 0;
-        follow = children_list.eq(1).children('a:first-child').text() || 0;
-        comment = children_list.eq(2).children('a:first-child').text() || 0;
+        bookmarket = children_list.eq(0).children('a:first-child').text().trim() || '0';
+        follow = children_list.eq(1).children('a:first-child').text().trim() || '0';
+        comment = children_list.eq(2).children('a:first-child').text().trim() || '0';
         callback(bookmarket,follow,comment);
+    })
+}
+
+/**
+ *url format:http://www.pixiv.net/member_illust.php?id=2482417
+ *传入作品URL，得到作品的名字、浏览量、作者、标签、下载地址的信息（原图及缩率图），传给回调函数
+ *
+ *warning：只能处理单张图片，不能处理漫画
+ */
+HTMLParser.parseWork = function(url,callback){
+    var header = require('./../requestHeader')(url);
+    HTMLParser.fetch(header,function($){
+        var workName,   //作品名
+            tags = [],  //TAG
+            pageView,   //浏览量
+            praise,     //点赞数
+            pixiver,    //作者
+            small_address,  //小图地址
+            big_address;    //大图地址
+
+            pixiver = $('.user-link').first().attr('href').split('=')[1];
+            big_address = $('img[class=original-image]').attr('data-src');
+            small_address = $('._layout-thumbnail').children().first().attr('src');
+            var array = small_address.split('/');
+            workName = array[array.length - 1];
+            pageView = $('.view-count').text();
+            praise = $('.rated-count').text();
+            var tag_length = $('.tags').children().length;
+            $('.tags').children().each(function(){
+                let tag = $(this).children('.text').text();
+                tag_length --;
+                if(tag){
+                    tags.push(tag);
+                }
+                if(!tag_length){
+                    var Work = require('./Work');
+                    var w = new Work(workName,tags,pageView,praise,pixiver,small_address,big_address);
+                    callback(w);
+                }
+            });
+
     })
 }
 

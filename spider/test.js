@@ -37,9 +37,8 @@ var fetch = function(url,callback){
 		log('error! request in fetch.js');
 	})
 }*/
+
 var HTMLParser = require('./class/HTMLParser');
-HTMLParser.parsePixiver('1184799',function(bookmarket,follow,comment){
-    console.log(bookmarket);
-    console.log(follow);
-    console.log(comment);
+HTMLParser.parseWork('http://www.pixiv.net/member_illust.php?mode=medium&illust_id=60639674',function(w){
+    w.print();
 })
