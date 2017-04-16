@@ -1,6 +1,6 @@
 'use strict';
 /**
- *created by regaliastar on 4/15
+ * @author regaliastar
  *
  *解析页面HTML元素
  */
@@ -119,6 +119,13 @@ HTMLParser.parseMutilWork = function(url,callback){
             })
         })
     })
+}
+
+/**
+ *
+ */
+HTMLParser.parseSearch = function(url,options,callback){
+
 }
 
 /**

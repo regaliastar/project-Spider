@@ -1,14 +1,25 @@
 'use strict';
 
+/**
+ * @author regaliastar
+ *
+ * @param workName      作品名
+ * @param tags          TAG
+ * @param pageView      浏览量
+ * @param praise        点赞数
+ * @param pixiver       作者
+ * @param small_address 小图地址
+ * @param big_address   大图地址
+ */
 class Work{
     constructor(workName,tags,pageView,praise,pixiver,small_address,big_address){
-        this.workName = workName;   //作品名
-        this.tags = tags;           //TAG
-        this.pageView = pageView;   //浏览量
-        this.praise = praise;       //点赞数
-        this.pixiver = pixiver;     //作者
-        this.small_address = small_address; //小图地址
-        this.big_address = big_address;     //大图地址
+        this.workName = workName;
+        this.tags = tags;
+        this.pageView = pageView;
+        this.praise = praise;
+        this.pixiver = pixiver;
+        this.small_address = small_address;
+        this.big_address = big_address;
     }
 }
 
@@ -18,11 +29,19 @@ Work.prototype.print = function(){
 }
 
 /**
- *box_address：数组变量，用于存放每一张漫画的地址
+ * box_address：数组变量，用于存放每一张漫画的地址
+ * @see Work
  */
 class MutilWork extends Work {
     constructor(workName,tags,pageView,praise,pixiver,small_address,big_address,box_address) {
+        /**
+         * @see Work 继承属性
+         */
         super(workName,tags,pageView,praise,pixiver,small_address,big_address);
+
+        /**
+         * @param box_address   专门存放每张漫画的地址
+         */
         this.box_address = box_address;
     }
 }
