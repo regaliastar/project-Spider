@@ -35,7 +35,6 @@ class Filter{
  */
 Filter.prototype.filter = function(worksList){
     var resultSet =Filter.filterInfo(Filter.filterTag(worksList,this.config) ,this.config);
-    //console.log('Filter.filterTag(worksList,this.config): '+JSON.stringify(Filter.filterTag(worksList,this.config)));
     this.passWorks.push(...resultSet);
     return resultSet;
 }

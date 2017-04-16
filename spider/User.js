@@ -1,7 +1,7 @@
 /**
- *create by regaliastar on 3/26
+ * @author regaliastar
  *
- *用于得到P站所有用户的信息，并保存在文件或数据库中
+ * 用于得到P站所有用户的信息，并保存在文件或数据库中
  */
  var fetch = require('./fetch'),
  	fs = require('fs'),
@@ -13,8 +13,8 @@
 var getUser = (function(){
 	var seed = 'http://www.pixiv.net/member.php?id=';
 	/**
-	 *得到个人信息的表格，并传递给callback
-	 *当获得完全时，调用回调函数
+	 * 得到个人信息的表格，并传递给callback
+	 * 当获得完全时，调用回调函数
 	 */
 	var fetchTable = function($,callback){
 		var UserInfo = {};
