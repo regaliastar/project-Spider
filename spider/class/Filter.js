@@ -85,33 +85,25 @@ Filter.filterTag =function(worksList ,{has_tag_every,has_tag_some,no_tag_any,no_
     var passWorks = worksList;
     if(has_tag_every && has_tag_every.length !==0){
         passWorks =passWorks.filter(function(works){
-            return has_tag_every.every(function(item){
-                return works.tagList.indexOf(item)!==-1;
-            });
+            return has_tag_every.every(item => works.tagList.indexOf(item)!==-1);
         });
     };
 
     if(has_tag_some && has_tag_some.length !==0){
         passWorks =passWorks.filter(function(works){
-            return has_tag_some.some(function(item){
-                return works.tagList.indexOf(item)!==-1;
-            });
+            return has_tag_some.some(item => works.tagList.indexOf(item)!==-1);
         });
     };
 
     if(no_tag_any && no_tag_any.length !==0){
         passWorks =passWorks.filter(function(works){
-            return !no_tag_any.some(function(item){
-                return works.tagList.indexOf(item)!==-1;
-            });
+            return !no_tag_any.some(item => works.tagList.indexOf(item)!==-1);
         });
     };
 
     if(no_tag_every && no_tag_every.length !==0){
         passWorks =passWorks.filter(function(works){
-            return !no_tag_every.every(function(item){
-                return works.tagList.indexOf(item)!==-1;
-            });
+            return !no_tag_every.every(item => works.tagList.indexOf(item)!==-1);
         });
     };
 
