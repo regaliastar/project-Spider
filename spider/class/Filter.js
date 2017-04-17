@@ -46,9 +46,9 @@ Filter.prototype.filter = function(worksList){
  */
 Filter.defaultConfig =function(){
     return{
-        "rated"     :0,//赞的数量
-        "rated_pro" :0,//点赞率
-        "view"      :0,//浏览数
+        "praise"     :0,//赞的数量
+        "praise_pro" :0,//点赞率
+        "pageView"      :0,//浏览数
         "has_tag_every" :[],
         "has_tag_some"  :[],
         "no_tag_any"    :[],
@@ -59,16 +59,16 @@ Filter.defaultConfig =function(){
 /**
  * 根据标签作品信息过滤作品
  * @param {Works[]} worksList
- * @param {number} rated      - 作品不小于的赞的数量
- * @param {number} rated_pro  - 作品不小于的点赞率，小于0的数字
- * @param {number} view       - 作品不小于的浏览数
+ * @param {number} praise      - 作品不小于的赞的数量
+ * @param {number} praise_pro  - 作品不小于的点赞率，小于0的数字
+ * @param {number} pageView       - 作品不小于的浏览数
  * @return {Works[]}
  */
-Filter.filterInfo =function(worksList ,{rated=0,rated_pro=0,view=0}){
+Filter.filterInfo =function(worksList ,{praise=0,praise_pro=0,pageView=0}){
     return worksList.filter(function(works){
-        return works.rated >= rated
-        && works.view >= view
-        && (works.rated/works.view) >= rated_pro;
+        return works.praise >= praise
+        && works.pageView >= pageView
+        && (works.praise/works.pageView) >= praise_pro;
     });
 };
 
@@ -85,25 +85,25 @@ Filter.filterTag =function(worksList ,{has_tag_every,has_tag_some,no_tag_any,no_
     var passWorks = worksList;
     if(has_tag_every && has_tag_every.length !==0){
         passWorks =passWorks.filter(function(works){
-            return has_tag_every.every(item => works.tagList.indexOf(item)!==-1);
+            return has_tag_every.every(item => works.tags.indexOf(item)!==-1);
         });
     };
 
     if(has_tag_some && has_tag_some.length !==0){
         passWorks =passWorks.filter(function(works){
-            return has_tag_some.some(item => works.tagList.indexOf(item)!==-1);
+            return has_tag_some.some(item => works.tags.indexOf(item)!==-1);
         });
     };
 
     if(no_tag_any && no_tag_any.length !==0){
         passWorks =passWorks.filter(function(works){
-            return !no_tag_any.some(item => works.tagList.indexOf(item)!==-1);
+            return !no_tag_any.some(item => works.tags.indexOf(item)!==-1);
         });
     };
 
     if(no_tag_every && no_tag_every.length !==0){
         passWorks =passWorks.filter(function(works){
-            return !no_tag_every.every(item => works.tagList.indexOf(item)!==-1);
+            return !no_tag_every.every(item => works.tags.indexOf(item)!==-1);
         });
     };
 
