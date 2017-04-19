@@ -23,7 +23,12 @@ var log = new Log('555');
 log.info('hhh','mmm');*/
 
 var Download = require('./class/Download');
-var d = new Download({'path':'./mypath'});
-d.load('task1');
-d.load(['task2','task3']);
-d.print();
+var d = new Download({'async':5});
+d.load('https://i.pximg.net/c/600x600/img-master/img/2016/12/30/01/17/14/60639674_p0_master1200.jpg');
+d.load('https://i.pximg.net/c/600x600/img-master/img/2016/11/11/00/07/26/59888759_p0_master1200.jpg');
+d.load('https://i.pximg.net/img-original/img/2016/11/11/00/07/26/59888759_p0.jpg');
+
+d.start(function(completed,ready){
+    console.log('已完成：'+completed);
+    console.log('还在等待：'+ready);
+});
