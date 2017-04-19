@@ -30,8 +30,8 @@ class Filter{
 /**
  * 对作品进行过滤
  * 先利用TAG过滤，再利用赞的数量、点赞率、浏览数过滤
- * @param {Works[]} worksList - 要过滤的作品数组
- * @return {Works[]} - 过滤后的结果
+ * @param {Work[]} worksList - 要过滤的作品数组
+ * @return {Work[]} - 过滤后的结果
  */
 Filter.prototype.filter = function(worksList){
     var resultSet =Filter.filterInfo(Filter.filterTag(worksList,this.config) ,this.config);

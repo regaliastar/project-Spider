@@ -17,8 +17,13 @@ var workList = [{'praise':10,"praise_pro":0,"pageView":100,"tags":['1','10'],"ur
 var resultSet = filter.filter(workList);
 console.log('resultSet: '+JSON.stringify(resultSet));*/
 
-
+/*
 var Log = require('./../Log');
 var log = new Log('555');
-log.info('hhh');
-log.error('error!!');
+log.info('hhh','mmm');*/
+
+var Download = require('./class/Download');
+var d = new Download({'path':'./mypath'});
+d.load('task1');
+d.load(['task2','task3']);
+d.print();
