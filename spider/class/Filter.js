@@ -34,10 +34,42 @@ class Filter{
  * @return {Work[]} - 过滤后的结果
  */
 Filter.prototype.filter = function(worksList){
+    if(Object.prototype.toString.call(worksList) !== '[object Array]'){
+        var p =[];
+        p.push(worksList);
+        var result =Filter.filterInfo(Filter.filterTag(p,this.config) ,this.config);
+        return result;
+    }
     var resultSet =Filter.filterInfo(Filter.filterTag(worksList,this.config) ,this.config);
-    this.passWorks.push(...resultSet);
+    //this.passWorks.push(...resultSet);
     return resultSet;
 }
+
+/**
+ * 对用户进行过滤
+ * 根据作品数，订阅数，评论数(bookmarket,follow,comment)进行过滤
+ * @param {Pixiver[]} pixiverList
+ * @return {Pixiver[]}
+ */
+ Filter.prototype.filterPixiver = function(pixiverList){
+     if(Object.prototype.toString.call(pixiverList) !== '[object Array]'){
+         var p =[];
+         p.push(pixiverList);
+         var result =Filter.filterPixiverInfo(p,this.config);
+         return result;
+     }
+     var resultSet =Filter.filterPixiverInfo(pixiverList,this.config);
+     //this.passWorks.push(...resultSet);
+     return resultSet;
+ }
+
+Filter.filterPixiverInfo =function(pixiverList,{bookmarket=0,follow=0,comment=0}){
+    return pixiverList.filter(function(pixiver){
+        return pixiver.bookmarket >= bookmarket
+        && pixiver.follow >= follow
+        && pixiver.comment >= comment;
+    });
+};
 
 /**
  * 返回Filter的默认配置参数
@@ -53,6 +85,9 @@ Filter.defaultConfig =function(){
         "has_tag_some"  :[],
         "no_tag_any"    :[],
         "no_tag_every"  :[],
+        "bookmarket"    :0,
+        "follow"        :0,
+        "comment"       :0
     };
 };
 

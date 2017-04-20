@@ -26,13 +26,15 @@ HTMLParser.parsePixiver = function(ID,callback){
     var bookmarket, //作品数
         follow,     //订阅数
         comment;    //评论数
+    var pixiver = require('./Pixiver');
 
     HTMLParser.fetch(seed,function($){
         var children_list = $('.count-container').children();
         bookmarket = children_list.eq(0).children('a:first-child').text().trim() || '0';
         follow = children_list.eq(1).children('a:first-child').text().trim() || '0';
         comment = children_list.eq(2).children('a:first-child').text().trim() || '0';
-        callback(bookmarket,follow,comment);
+        var p = new pixiver(ID,bookmarket,follow,comment);
+        callback(p);
     })
 }
 
@@ -152,7 +154,7 @@ HTMLParser.parseMutilWork = function(url,callback){
 /**
  *
  */
-HTMLParser.parseSearch = function(url,options,callback){
+HTMLParser.parseSearch = function(url,filter,callback){
 
 }
 
@@ -165,12 +167,13 @@ HTMLParser.parseSearch = function(url,options,callback){
 HTMLParser.fetch = function(header,callback){
     var request = require('request'),
 	    cheerio = require('cheerio'),
-	    log = require('./../../log');
+	    Log = require('./../../log');
+    var log = new Log();
 
 	request(header,function(err,res){
 		if(err){
 			console.log(err);
-			log(err);
+			log.error(err);
 			return;
 		}
 
@@ -178,7 +181,7 @@ HTMLParser.fetch = function(header,callback){
 		callback($);
 	}).on('error',function(){
 		//监听error事件，当错误发生时代码可继续执行而不中断
-		log('error! request in fetch.js');
+		log.error('error! request in fetch.js');
 	})
 }
 

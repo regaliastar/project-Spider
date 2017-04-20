@@ -40,7 +40,6 @@ class Download extends EventEmitter{
              'error':this.error
          };
          console.log(JSON.stringify(INFO));
-         this.emit('data','print over~');
       }
 }
 

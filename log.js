@@ -20,7 +20,7 @@ class Log{
 }
 
 /**
- * 写文件
+ * 写日志文件
  */
 Log.log = function(){
 	var date = Log.getDate();
@@ -34,6 +34,22 @@ Log.log = function(){
 	var txt = [].join.call(args,' ');
 
 	fs.appendFile('./logs/'+date+'.log',time+txt+'\n','utf-8',function(err){
+		if(err){
+			throw err;
+		}
+	})
+}
+
+/**
+ * 写普通文件
+ */
+Log.prototype.write = function(){
+	var date = Log.getDate();
+
+	var args = Array.prototype.slice.call(arguments);
+	var txt = [].join.call(args,' ');
+
+	fs.appendFile('./'+date+'.log',txt+'\n','utf-8',function(err){
 		if(err){
 			throw err;
 		}
