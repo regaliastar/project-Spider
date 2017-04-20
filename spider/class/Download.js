@@ -1,12 +1,14 @@
 'use strict';
 var Log = require('./../../Log');
-
+var EventEmitter = require('events').EventEmitter;
 /**
  * @author regaliastar
  *
  * 下载类，下载工具的提供者
+ * @extends EventEmitter
+ * @param 定义事件  'error','message','finish'
  */
-class Download{
+class Download extends EventEmitter{
     /**
      * 通过构造函数，可设置文件的下载路径等信息
      * @see Download.defaultConfig
@@ -16,10 +18,13 @@ class Download{
           * @param {string[]} tasks 进行中任务的集合
           * @param {Number} completed 已完成任务的数量
           * @param {Number} ready   等待的任务数量
+          * @param {Number} error   请求错误的任务数量
           */
+         super();
          this.tasks =[];
-         this.ready =0;
          this.completed =0;
+         this.ready =0;
+         this.error =0;
          this.config = Object.assign(Download.defaultConfig(),config);
      }
 
@@ -27,7 +32,15 @@ class Download{
       * 打印信息，用于调试
       */
       print(){
-         console.log('tasks: '+JSON.stringify(this.tasks));
+         var INFO = {
+             'tasks':this.tasks,
+             '任务总数':this.tasks.length,
+             'ready':this.ready,
+             'completed':this.completed,
+             'error':this.error
+         };
+         console.log(JSON.stringify(INFO));
+         this.emit('data','print over~');
       }
 }
 
@@ -35,23 +48,47 @@ class Download{
  * 装载需要完成的任务
  */
 Download.prototype['load'] = function(tasksList){
-    if(Object.prototype.toString.call(tasksList) === '[object String]'){
-        this.tasks.push(tasksList);
-        this.ready++;
-        return;
+    var log = new Log('Download.load');
+    var type = Object.prototype.toString.call(tasksList);
+    switch (type) {
+        case '[object String]':
+            this.tasks.push(tasksList);
+            this.ready++;
+            this.emit('data','load over~');
+            break;
+        case '[object Array]':
+            var args = Array.prototype.slice.call(tasksList);
+            Array.prototype.push.apply(this.tasks,args);
+            this.ready += args.length;
+            this.emit('data','load over~');
+            break;
+        default:
+            //console.log('load只能传入字符串或数组');
+            log.info('load只能传入字符串或数组',tasksList);
+            break;
     }
-    var args = Array.prototype.slice.call(tasksList);
-    Array.prototype.push.apply(this.tasks,args);
-    this.ready += args.length;
+
+
 }
 
 /**
- * 任务开始，执行this.tasks里的任务，将完成信息的传递给回调函数处理
+ * 初始化
+ */
+Download.prototype['init'] = function(){
+    this.tasks =[];
+    this.ready =0;
+    this.completed =0;
+    this.error =0;
+}
+
+/**
+ * 任务开始，执行this.tasks里的任务（装载后的任务），将完成信息的传递给回调函数处理
  * @param this.tasks
  * @param this.config
  * @see Log
+ *
  */
-Download.prototype['start'] = function(cb){
+Download.prototype['start'] = function(){
     var async = require('async'),
         request = require('request'),
         fs = require('fs');
@@ -63,19 +100,56 @@ Download.prototype['start'] = function(cb){
     }
 
     async.mapLimit(_self.tasks,_self.config.async,function(url,callback){
+        /**
+         * 验证URL是否合法
+         */
         if(!url)    return;
+        var strRegex ='(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]';
+        var re=new RegExp(strRegex);
+        if(!re.test(url)){
+            _self.ready--;
+            _self.error++;
+            log.info('url非法: '+url);
+            //return;
+        }
+
+        /**
+         * 开始请求下载
+         */
         var header = Download.createHeader(url);
         var filename =url.substring(url.lastIndexOf('/')+1);
 
         request(header)
-            .on('error',function(err){log.error(err);return;})
+            .on('error',function(err){
+                    log.error(err,'1 error');
+                    /**
+                     * 发射错误事件
+                     */
+                    _self.emit('error',url);
+                    return;
+                })
                 .pipe(fs.createWriteStream(_self.config.path+'/'+filename))
-                    .on('error',function(err){log.error(err);return;})
+                    .on('error',function(err){
+                        log.error(err,'2 error');_self.error++;_self.ready--;
+                        /**
+                         * 发射错误事件
+                         */
+                        _self.emit('error',url+' 无法解析');
+                        if(_self.ready ===0){
+                            _self.emit('finish',_self.completed,_self.ready,_self.error);
+                        }
+                        return;
+                    })
                         .on('close', function(){
-                            console.log(filename+'下载完成');
+                            _self.emit('message',filename+'下载完成');
                             _self.completed++;
                             _self.ready--;
-                            cb(_self.completed,_self.ready);
+                            /**
+                             * 发射结束事件
+                             */
+                            if(_self.ready ===0){
+                                _self.emit('finish',_self.completed,_self.ready,_self.error);
+                            }
                         });
 
         callback();

@@ -19,6 +19,7 @@ class HTMLParser{
  * 作品数，订阅数，评论数(bookmarket,follow,comment)，并传入回调函数
  *
  * @see HTMLParser.fetch
+ * @callback callback(bookmarket,follow,comment)
  */
 HTMLParser.parsePixiver = function(ID,callback){
     var seed = 'http://www.pixiv.net/member.php?id='+ID;
@@ -45,6 +46,7 @@ HTMLParser.parsePixiver = function(ID,callback){
  * @param {string}  pageView    浏览量
  * @param {string}  praise      点赞数
  * @param {string}  pixiver     作者
+ * @callback        callback(Util)
  */
 HTMLParser.initWork = function($,callback){
     var Util = {},
@@ -81,6 +83,7 @@ HTMLParser.initWork = function($,callback){
  * @param {string}  workName        作品名
  * @param {string}  small_address   小图地址
  * @param {string}  big_address     大图地址
+ * @callback     {Work}   callback(w)
  */
 HTMLParser.parseWork = function(url,callback){
     var header = require('./../requestHeader')(url);
@@ -113,6 +116,7 @@ HTMLParser.parseWork = function(url,callback){
  * @param {string}  big_address     大图地址
  * @param {string[]} box_address    数组变量，用于存放每一张漫画的地址
  * @param {string}  next            存放所有画的页面的URL
+ * @callback   {MutilWork}     callback(mw);
  */
 HTMLParser.parseMutilWork = function(url,callback){
     var header = require('./../requestHeader')(url);
@@ -156,6 +160,7 @@ HTMLParser.parseSearch = function(url,options,callback){
  * 设计模式：策略模式;根据不同的回调函数执行不同的方法,降低代码的耦合度
  *
  * 传入请求头,取得网页并将网页解析成支持JQuery选择器的$，并将待处理的数据传递给回调函数处理
+ * @callback callback($)
  */
 HTMLParser.fetch = function(header,callback){
     var request = require('request'),

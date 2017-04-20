@@ -26,9 +26,25 @@ var Download = require('./class/Download');
 var d = new Download({'async':5});
 d.load('https://i.pximg.net/c/600x600/img-master/img/2016/12/30/01/17/14/60639674_p0_master1200.jpg');
 d.load('https://i.pximg.net/c/600x600/img-master/img/2016/11/11/00/07/26/59888759_p0_master1200.jpg');
-d.load('https://i.pximg.net/img-original/img/2016/11/11/00/07/26/59888759_p0.jpg');
+//d.load('https://i.pximg.net/img-original/img/2016/11/11/00/07/26/59888759_p0.jpg');
+d.load('https://www.baidu.com/');
 
-d.start(function(completed,ready){
+/*d.start(function(completed,ready,error){
     console.log('已完成：'+completed);
     console.log('还在等待：'+ready);
+    console.log('发生错误：'+error);
+});*/
+d.start();
+
+d.on('error',function(url){
+    console.log('下载失败：'+url);
 });
+d.on('message',function(msg){
+console.log(msg);
+})
+d.on('finish',function(completed,ready,error){
+    console.log('所有资源下载完成');
+    console.log('已完成：'+completed);
+    console.log('还在等待：'+ready);
+    console.log('发生错误：'+error);
+})
