@@ -23,19 +23,56 @@ class HTMLParser{
  */
 HTMLParser.parsePixiver = function(ID,callback){
     var seed = 'http://www.pixiv.net/member.php?id='+ID;
-    var bookmarket, //作品数
+    var avator,     //头像
+        bookmarket, //作品数
         follow,     //订阅数
         comment;    //评论数
     var pixiver = require('./Pixiver');
 
     HTMLParser.fetch(seed,function($){
         var children_list = $('.count-container').children();
+        avator = $('.usericon').children('img:first-child').attr('src');
         bookmarket = children_list.eq(0).children('a:first-child').text().trim() || '0';
         follow = children_list.eq(1).children('a:first-child').text().trim() || '0';
         comment = children_list.eq(2).children('a:first-child').text().trim() || '0';
-        var p = new pixiver(ID,bookmarket,follow,comment);
+        var p = new pixiver(ID,avator,bookmarket,follow,comment);
         callback(p);
     })
+}
+
+/**
+ * @param ID format: '1184799';
+ * 将作者的作品信息传递给回调函数
+ * @see Work
+ * @param {Work} {MutilWork}    worksList
+ * @callback worksList
+ */
+HTMLParser.parsePixiverWorks = function(ID,callback){
+    var seed ='https://www.pixiv.net/member_illust.php?id='+ID;
+    var worksList =[];
+    var worksUrls =[];
+    var header =require('./../requestHeader')(seed);
+    var parseOnePage = function(){
+        HTMLParser.fetch(header,function($){
+            /**
+             * 将页面内的URL装入容器之中
+             */
+            $('._image-items').children().each(function(){
+                worksUrls.push('http://www.pixiv.net'+$(this).children('a:first-child').attr('href'));
+            });
+            var NEXT =$('.next').first().children().attr('href');
+            var NEXT_URL =seed.split('?')[0]+NEXT;
+            if(NEXT){
+                parseOnePage();
+            }else {
+                callback(worksUrls);
+            }
+            //console.log(worksUrls.join(','));
+            return true;
+        });
+    }
+
+
 }
 
 /**

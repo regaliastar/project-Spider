@@ -61,26 +61,26 @@ console.log(JSON.stringify(resultSet));*/
 var Log =require('./../Log');
 var log =new Log();
 log.write('111');*/
-
+/*
 var HTMLParser = require('./class/HTMLParser');
 var Filter = require('./class/Filter');
 var Log = require('./../Log');
 var log = new Log();
 var async = require('async');
 var tasks =[];
-var filter = new Filter({'bookmarket':100,'follow':100,'comment':100});
-var t ={'id':1,'bookmarket':10,'follow':10,'comment':10};
-
-var tt = filter.filterPixiver(t);
-console.log(JSON.stringify(tt));
-for(let i=2000000;i<2001000;i++){
+var count =0;
+var filter = new Filter({'bookmarket':1,'follow':1,'comment':1});
+for(var i=1000000;i<1001000;i++){
     tasks.push(''+i);
 }
+console.log('length: '+tasks.length);
 
-async.mapLimit(tasks,5,function(id,callback){
+async.mapLimit(tasks,2,function(id,callback){
+    console.log('count: '+count);
+    count++;
     HTMLParser.parsePixiver(id,function(user){
         var u = filter.filterPixiver(user);
-        if(u){
+        if(u.length !==0){
             log.write(JSON.stringify(user));
         }
     });
@@ -90,4 +90,8 @@ async.mapLimit(tasks,5,function(id,callback){
         console.log(err);
     }
     console.log('fin');
+});*/
+var HTMLParser = require('./class/HTMLParser');
+HTMLParser.parsePixiverWorks('1000727',function(worksList){
+    console.log(worksList.join(','));
 });

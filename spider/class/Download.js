@@ -81,7 +81,7 @@ Download.prototype['init'] = function(){
 }
 
 /**
- * 任务开始，执行this.tasks里的任务（装载后的任务），将完成信息的传递给回调函数处理
+ * 任务开始，执行this.tasks里的任务（装载后的任务），将完成信息触发对应的事件进行处理
  * @param this.tasks
  * @param this.config
  * @see Log
