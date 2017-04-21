@@ -8,11 +8,16 @@ class HTMLParser{
     /**
      * 该类禁止使用构造函数
      */
-    constructor(){
-        throw new Error('HTMLParser could not be a constructor');
+    constructor(config){
+        this.config = Object.assign(Manager.defaultConfig(),config);
     };
 }
 
+HTMLParser.defaultConfig = function(){
+    return{
+        "async" :   5//默认异步数量
+    }
+}
 /**
  * @param ID format: '1184799';
  * 以不伪装的形式访问作者信息，得到
@@ -42,17 +47,16 @@ HTMLParser.parsePixiver = function(ID,callback){
 
 /**
  * @param ID format: '1184799';
- * 将作者的作品信息传递给回调函数
+ * 将作者的所有(!important)作品的地址信息传递给回调函数
  * @see Work
  * @param {Work} {MutilWork}    worksList
- * @callback worksList
+ * @callback worksUrls
  */
-HTMLParser.parsePixiverWorks = function(ID,callback){
+HTMLParser.pushPixiverWorks = function(ID,callback){
     var seed ='https://www.pixiv.net/member_illust.php?id='+ID;
-    var worksList =[];
     var worksUrls =[];
-    var header =require('./../requestHeader')(seed);
-    var parseOnePage = function(){
+
+    var parseOnePage = function(header){
         HTMLParser.fetch(header,function($){
             /**
              * 将页面内的URL装入容器之中
@@ -63,16 +67,53 @@ HTMLParser.parsePixiverWorks = function(ID,callback){
             var NEXT =$('.next').first().children().attr('href');
             var NEXT_URL =seed.split('?')[0]+NEXT;
             if(NEXT){
-                parseOnePage();
+                var h =require('./../requestHeader')(NEXT_URL);
+                parseOnePage(h);
             }else {
                 callback(worksUrls);
             }
-            //console.log(worksUrls.join(','));
             return true;
         });
     }
+    var header =require('./../requestHeader')(seed);
+    parseOnePage(header);
+}
 
+/**
+ * @param ID format: '1184799';
+ * @see HTMLParser.pushPixiverWorks - 严重依赖关系
+ * @see HTMLParser.parseWork - 严重依赖关系
+ * @see HTMLParser.parseMutilWork - 严重依赖关系
+ * @callback {Work[]} {MutilWork[]}
+ */
+HTMLParser.parsePixiverWorks = function(ID,callback){
+    var async =require('async');
+    var worksList =[];
+    HTMLParser.pushPixiverWorks(ID,function(worksUrls){
+        var tasksLength =worksUrls.length;
+        console.log('origin length: '+tasksLength);
+        async.mapLimit(worksUrls,3,function(url,cb){
+            HTMLParser.parseWork(url,function(w){
+                console.log(w);
+                worksList.push(w);
+                tasksLength--;
+                if(!tasksLength)    callback(worksList);
+            });
+            HTMLParser.parseMutilWork(url,function(mw){
+                console.log(mw);
+                worksList.push(mw);
+                tasksLength--;
+                if(!tasksLength)    callback(worksList);
+            });
 
+            cb();
+        },function(err,callback){
+            if(err){
+                console.log(err);
+            }
+            console.log('parsePixiverWorks fin');
+        });
+    });
 }
 
 /**
@@ -132,6 +173,9 @@ HTMLParser.parseWork = function(url,callback){
             big_address;
 
         big_address = $('img[class=original-image]').attr('data-src');
+        //判断该地址是Work还是MutilWork，若不符直接退出
+        if(!big_address)    return;
+
         small_address = $('._layout-thumbnail').children().first().attr('src');
         var array = small_address.split('/');
         workName = array[array.length - 1];
@@ -166,6 +210,11 @@ HTMLParser.parseMutilWork = function(url,callback){
 
         var small_address = $('._layout-thumbnail').children('img').attr('src');    //小图地址
         var big_address = small_address;                                            //大图地址
+        //判断该地址是Work还是MutilWork，若不符直接退出
+        var testUrl =$('img[class=original-image]').attr('data-src');
+        if(testUrl)    return;
+        if(!small_address)  return;
+
         var array = small_address.split('/');
         var workName = array[array.length - 1];
         next = 'http://www.pixiv.net/'+$('._work.multiple').first().attr('href');

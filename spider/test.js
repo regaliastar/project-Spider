@@ -91,7 +91,14 @@ async.mapLimit(tasks,2,function(id,callback){
     }
     console.log('fin');
 });*/
+
+
 var HTMLParser = require('./class/HTMLParser');
-HTMLParser.parsePixiverWorks('1000727',function(worksList){
-    console.log(worksList.join(','));
+var Log =require('./../Log');
+var log =new Log();
+HTMLParser.parsePixiverWorks('2482417',function(worksList){
+    for(var i in worksList){
+        log.write(JSON.stringify(worksList[i]));
+    }
+
 });
