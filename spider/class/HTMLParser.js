@@ -1,21 +1,23 @@
 'use strict';
+var EventEmitter = require('events').EventEmitter;
 /**
  * @author regaliastar
  *
  * 解析页面HTML元素
  */
-class HTMLParser{
+class HTMLParser extends EventEmitter{
     /**
      * 该类禁止使用构造函数
      */
     constructor(config){
-        this.config = Object.assign(Manager.defaultConfig(),config);
+        super();
+        this.config = Object.assign(HTMLParser.defaultConfig(),config);
     };
 }
 
 HTMLParser.defaultConfig = function(){
     return{
-        "async" :   5//默认异步数量
+        "async" :   3//默认异步数量
     }
 }
 /**
@@ -86,24 +88,28 @@ HTMLParser.pushPixiverWorks = function(ID,callback){
  * @see HTMLParser.parseMutilWork - 严重依赖关系
  * @callback {Work[]} {MutilWork[]}
  */
-HTMLParser.parsePixiverWorks = function(ID,callback){
+HTMLParser.prototype.parsePixiverWorks = function(ID){
     var async =require('async');
     var worksList =[];
+    var _self =this;
     HTMLParser.pushPixiverWorks(ID,function(worksUrls){
         var tasksLength =worksUrls.length;
+        var originLength =tasksLength;
         console.log('origin length: '+tasksLength);
-        async.mapLimit(worksUrls,3,function(url,cb){
+        async.mapLimit(worksUrls,_self.config.async,function(url,cb){
             HTMLParser.parseWork(url,function(w){
-                console.log(w);
+                //console.log(w);
                 worksList.push(w);
                 tasksLength--;
-                if(!tasksLength)    callback(worksList);
+                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                if(!tasksLength)    _self.emit('finish',worksList);
             });
             HTMLParser.parseMutilWork(url,function(mw){
-                console.log(mw);
+                //console.log(mw);
                 worksList.push(mw);
                 tasksLength--;
-                if(!tasksLength)    callback(worksList);
+                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                if(!tasksLength)    _self.emit('finish',worksList);
             });
 
             cb();
@@ -240,7 +246,7 @@ HTMLParser.parseMutilWork = function(url,callback){
 /**
  *
  */
-HTMLParser.parseSearch = function(url,filter,callback){
+HTMLParser.prototype.parseSearch = function(url,filter,callback){
 
 }
 

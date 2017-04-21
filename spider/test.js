@@ -94,11 +94,18 @@ async.mapLimit(tasks,2,function(id,callback){
 
 
 var HTMLParser = require('./class/HTMLParser');
+var parser =new HTMLParser();
 var Log =require('./../Log');
 var log =new Log();
-HTMLParser.parsePixiverWorks('2482417',function(worksList){
+
+parser.parsePixiverWorks('2482417');
+
+parser.on('message',function(msg){
+    console.log('msg: '+msg);
+});
+
+parser.on('finish',function(worksList){
     for(var i in worksList){
         log.write(JSON.stringify(worksList[i]));
     }
-
-});
+})
