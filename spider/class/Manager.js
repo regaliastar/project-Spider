@@ -16,4 +16,5 @@ Manager.defaultConfig = function(){
 
 Manager.createPixiverTasks = function(){
     var HTMLParser =require('./HTMLParser');
+
 }

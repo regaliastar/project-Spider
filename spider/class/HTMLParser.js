@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
  * @author regaliastar
  *
  * 解析页面HTML元素
+ * 所有方法均依赖`HTMLParser.fetch`
  */
 class HTMLParser extends EventEmitter{
     /**
@@ -49,7 +50,7 @@ HTMLParser.parsePixiver = function(ID,callback){
 
 /**
  * @param ID format: '1184799';
- * 将作者的所有(!important)作品的地址信息传递给回调函数
+ * 将作者的所有(!important)作品的地址信息传递给回调函数，通过递归实现
  * @see Work
  * @param {Work} {MutilWork}    worksList
  * @callback worksUrls
@@ -95,7 +96,7 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
     HTMLParser.pushPixiverWorks(ID,function(worksUrls){
         var tasksLength =worksUrls.length;
         var originLength =tasksLength;
-        console.log('origin length: '+tasksLength);
+        //console.log('origin length: '+tasksLength);
         async.mapLimit(worksUrls,_self.config.async,function(url,cb){
             HTMLParser.parseWork(url,function(w){
                 //console.log(w);
@@ -119,6 +120,21 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
             }
             console.log('parsePixiverWorks fin');
         });
+    });
+}
+
+/**
+ * 解析最新的国际排行榜，并返回所有作品的信息
+ */
+HTMLParser.prototype.parseGlobalRank = function(callback){
+    var seed ='http://www.pixiv.net/ranking_area.php?type=detail&no=6';
+    var header =require('./../requestHeader')(seed);
+    HTMLParser.fetch(header,function($){
+        var worksUrls =[];
+        $('.ranking-items').children().each(function(){
+            worksUrls.push('http://www.pixiv.net/'+$(this).children().first().next().children().attr('href'));
+        });
+        callback(worksUrls);
     });
 }
 

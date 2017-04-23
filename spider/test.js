@@ -92,12 +92,11 @@ async.mapLimit(tasks,2,function(id,callback){
     console.log('fin');
 });*/
 
-
+/*
 var HTMLParser = require('./class/HTMLParser');
 var parser =new HTMLParser();
 var Log =require('./../Log');
 var log =new Log();
-
 parser.parsePixiverWorks('2482417');
 
 parser.on('message',function(msg){
@@ -105,6 +104,16 @@ parser.on('message',function(msg){
 });
 
 parser.on('finish',function(worksList){
+    for(var i in worksList){
+        log.write(JSON.stringify(worksList[i]));
+    }
+})*/
+
+var HTMLParser = require('./class/HTMLParser');
+var parser =new HTMLParser();
+var Log =require('./../Log');
+var log =new Log();
+parser.parseGlobalRank(function(worksList){
     for(var i in worksList){
         log.write(JSON.stringify(worksList[i]));
     }
