@@ -8,7 +8,7 @@ var EventEmitter = require('events').EventEmitter;
  */
 class HTMLParser extends EventEmitter{
     /**
-     * 该类禁止使用构造函数
+     * 构造函数
      */
     constructor(config){
         super();
