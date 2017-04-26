@@ -17,8 +17,104 @@ var workList = [{'praise':10,"praise_pro":0,"pageView":100,"tags":['1','10'],"ur
 var resultSet = filter.filter(workList);
 console.log('resultSet: '+JSON.stringify(resultSet));*/
 
-
+/*
 var Log = require('./../Log');
 var log = new Log('555');
-log.info('hhh');
-log.error('error!!');
+log.info('hhh','mmm');*/
+/*
+var Download = require('./class/Download');
+var d = new Download({'async':5});
+d.load('https://i.pximg.net/c/600x600/img-master/img/2016/12/30/01/17/14/60639674_p0_master1200.jpg');
+d.load('https://i.pximg.net/c/600x600/img-master/img/2016/11/11/00/07/26/59888759_p0_master1200.jpg');
+//d.load('https://i.pximg.net/img-original/img/2016/11/11/00/07/26/59888759_p0.jpg');
+d.load('https://www.baidu.com/');
+
+d.start();
+
+d.on('error',function(url){
+    console.log('下载失败：'+url);
+});
+d.on('message',function(msg){
+console.log(msg);
+})
+d.on('finish',function(completed,ready,error){
+    console.log('所有资源下载完成');
+    console.log('已完成：'+completed);
+    console.log('还在等待：'+ready);
+    console.log('发生错误：'+error);
+})*/
+/*
+var H = require('./class/HTMLParser');
+H.parsePixiver('1184799',function(user){
+    user.print();
+})*/
+/*
+var Filter = require('./class/Filter');
+var filter = new Filter({'bookmarket':1,'follow':0,'comment':0});
+var PList =[{'id':1,'bookmarket':10,'follow':10,'comment':10},
+            {'id':2,'bookmarket':100,'follow':100,'comment':100},
+            {'id':3,'bookmarket':0,'follow':0,'comment':0}];
+
+var resultSet = filter.filterPixiver(PList);
+console.log(JSON.stringify(resultSet));*/
+/*
+var Log =require('./../Log');
+var log =new Log();
+log.write('111');*/
+/*
+var HTMLParser = require('./class/HTMLParser');
+var Filter = require('./class/Filter');
+var Log = require('./../Log');
+var log = new Log();
+var async = require('async');
+var tasks =[];
+var count =0;
+var filter = new Filter({'bookmarket':1,'follow':1,'comment':1});
+for(var i=1000000;i<1001000;i++){
+    tasks.push(''+i);
+}
+console.log('length: '+tasks.length);
+
+async.mapLimit(tasks,2,function(id,callback){
+    console.log('count: '+count);
+    count++;
+    HTMLParser.parsePixiver(id,function(user){
+        var u = filter.filterPixiver(user);
+        if(u.length !==0){
+            log.write(JSON.stringify(user));
+        }
+    });
+    callback();
+},function(err,callback){
+    if(err){
+        console.log(err);
+    }
+    console.log('fin');
+});*/
+
+/*
+var HTMLParser = require('./class/HTMLParser');
+var parser =new HTMLParser();
+var Log =require('./../Log');
+var log =new Log();
+parser.parsePixiverWorks('2482417');
+
+parser.on('message',function(msg){
+    console.log('msg: '+msg);
+});
+
+parser.on('finish',function(worksList){
+    for(var i in worksList){
+        log.write(JSON.stringify(worksList[i]));
+    }
+})*/
+
+var HTMLParser = require('./class/HTMLParser');
+var parser =new HTMLParser();
+var Log =require('./../Log');
+var log =new Log();
+parser.parseGlobalRank(function(worksList){
+    for(var i in worksList){
+        log.write(JSON.stringify(worksList[i]));
+    }
+})

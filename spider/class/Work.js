@@ -24,8 +24,7 @@ class Work{
 }
 
 Work.prototype.print = function(){
-    console.log(this.workName,this.tags.join(','),this.pageView,this.praise,
-                this.pixiver,this.small_address,this.big_address);
+    console.log(JSON.stringify(this));
 }
 
 /**
@@ -47,8 +46,7 @@ class MutilWork extends Work {
 }
 
 MutilWork.prototype.print = function(){
-    console.log(this.workName,this.tags.join(','),this.pageView,this.praise,
-                this.pixiver,this.small_address,this.big_address,this.box_address.join(','));
+    console.log(JSON.stringify(this));
 }
 
 exports.Work = Work;

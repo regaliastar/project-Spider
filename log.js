@@ -20,7 +20,7 @@ class Log{
 }
 
 /**
- * 写文件
+ * 写日志文件
  */
 Log.log = function(){
 	var date = Log.getDate();
@@ -41,15 +41,31 @@ Log.log = function(){
 }
 
 /**
+ * 写普通文件
+ */
+Log.prototype.write = function(){
+	var date = Log.getDate();
+
+	var args = Array.prototype.slice.call(arguments);
+	var txt = [].join.call(args,' ');
+
+	fs.appendFile('./'+date+'.log',txt+'\n','utf-8',function(err){
+		if(err){
+			throw err;
+		}
+	})
+}
+
+/**
  * 用于记录一般信息，INFO级别，主要为通知信息
- * 传入任意个字符串，将其按空格分开，并按时间作为文件名写在调用路径的logs目录下
+ * 传入任意个字符串，将其按空格分开，并按日期作为文件名写在调用路径的logs目录下
  *
  * @param this.re 在传入前缀re的情况下，info前缀会改变成设定的值
  * @see Log.log()
  */
 Log.prototype.info = function(){
 	this.re = this.re || '[INFO]';
-	var args = Array.prototype.slice.call(arguments);
+	var args = Array.prototype.slice.apply(arguments);
 	args.unshift(this.re);
 	this.re = '';
 	Log.log.apply(this,args);
@@ -61,7 +77,7 @@ Log.prototype.info = function(){
  * @see Log.log()
  */
 Log.prototype.error = function(){
-	var args = Array.prototype.slice.call(arguments);
+	var args = Array.prototype.slice.apply(arguments);
 	args.unshift('[ERROR]');
 	Log.log.apply(this,args);
 }
