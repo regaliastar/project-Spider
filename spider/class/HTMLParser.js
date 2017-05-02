@@ -21,6 +21,7 @@ HTMLParser.defaultConfig = function(){
         "async" :   3//默认异步数量
     }
 }
+
 /**
  * @param ID format: '1184799';
  * 以不伪装的形式访问作者信息，得到
@@ -103,14 +104,14 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
                 worksList.push(w);
                 tasksLength--;
                 _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
-                if(!tasksLength)    _self.emit('finish',worksList);
+                if(!tasksLength)    _self.emit('close',worksList);
             });
             HTMLParser.parseMutilWork(url,function(mw){
                 //console.log(mw);
                 worksList.push(mw);
                 tasksLength--;
                 _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
-                if(!tasksLength)    _self.emit('finish',worksList);
+                if(!tasksLength)    _self.emit('close',worksList);
             });
 
             cb();

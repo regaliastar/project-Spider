@@ -37,7 +37,7 @@ d.on('error',function(url){
 d.on('message',function(msg){
 console.log(msg);
 })
-d.on('finish',function(completed,ready,error){
+d.on('close',function(completed,ready,error){
     console.log('所有资源下载完成');
     console.log('已完成：'+completed);
     console.log('还在等待：'+ready);
@@ -103,12 +103,12 @@ parser.on('message',function(msg){
     console.log('msg: '+msg);
 });
 
-parser.on('finish',function(worksList){
+parser.on('close',function(worksList){
     for(var i in worksList){
         log.write(JSON.stringify(worksList[i]));
     }
 })*/
-
+/*
 var HTMLParser = require('./class/HTMLParser');
 var parser =new HTMLParser();
 var Log =require('./../Log');
@@ -117,4 +117,15 @@ parser.parseGlobalRank(function(worksList){
     for(var i in worksList){
         log.write(JSON.stringify(worksList[i]));
     }
-})
+})*/
+
+var Log =require('./../Log');
+var log =new Log();
+var App = require('./class/App');
+var config = {
+    'async': 2,                 //并发量
+    'tasksNumber': 10,         //任务数量
+    'filter':{'bookmarket':0,'follow':0,'comment':0,'praise':0,'pageView':0}    //默认过滤
+}
+var app = new App(config);
+app.createPixiverTasks(2482417);
