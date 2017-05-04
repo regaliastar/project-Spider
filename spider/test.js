@@ -118,14 +118,28 @@ parser.parseGlobalRank(function(worksList){
         log.write(JSON.stringify(worksList[i]));
     }
 })*/
+/*
+var Log =require('./../Log');
+var log =new Log();
+var App = require('./class/App');
+var config = {
+    'async': 2,                 //并发量
+    'tasksNumber': 2100,         //任务数量
+    'filter':{'bookmarket':0,'follow':0,'comment':0,'praise':0,'pageView':0}    //默认过滤
+}
+var app = new App(config);
+app.createPixiverTasks(2482417);*/
 
 var Log =require('./../Log');
 var log =new Log();
 var App = require('./class/App');
 var config = {
     'async': 2,                 //并发量
-    'tasksNumber': 10,         //任务数量
+    'tasksNumber': 25,         //任务数量
     'filter':{'bookmarket':0,'follow':0,'comment':0,'praise':0,'pageView':0}    //默认过滤
 }
-var app = new App(config);
-app.createPixiverTasks(2482417);
+var app1 = new App(config);
+//5481866
+app1.createPixiverWorkTasks(5481846);
+var app2 = new App(config);
+app2.createPixiverTasks(5481846);

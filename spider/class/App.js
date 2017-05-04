@@ -3,10 +3,13 @@ var EventEmitter = require('events').EventEmitter;
 
 /**
  * 该类用来执行具体的任务
+ *
+ * 主要是为了解决Manager无法解决的巨量任务的分配与调度问题
  */
 class App extends EventEmitter{
     constructor(config){
         super();
+        this.maxTasksLength =1000;  //能单次被async处理的最大任务长度
         this.config = Object.assign(App.defaultConfig(),config);
     }
 }
@@ -22,29 +25,104 @@ App.defaultConfig = function(){
 
 /**
  * 分隔任务
+ * @param {number}  first   -从first作者ID开始爬取
+ * @param {number}  DELIM   -将任务分成DELIM个小任务
+ * @param {number}  POSTFIX -末尾的任务数量,如：若总任务为2100，则DELIM =3，postfix =100
+ * @param {number}  COUNT   -记录当前任务是第几个任务
  */
-App.prototype.createPixiverTasks = function(first){
+App.prototype['createPixiverTasks'] = function(first){
      var _self =this;
      var DELIM =0;
-     var Log = require('./../../Log');
-     var log = new Log();
-     if(first > 1000){
-         DELIM =Math.floor(first/1000);
-     }
+     var POSTFIX =0;
+     var COUNT =0;
+     var FIRST =first;
 
-     var Manager =require('./Manager');
-     var manager = new Manager(_self.config);
-     manager.createPixiverTasks(first);
-     manager.on('message',function(msg){
-         console.log('msg: '+msg);
-     });
-     manager.on('success',function(user){
-         var txt =JSON.stringify(user);
-         log.writeFile('mmm',txt);
-     });
-     manager.on('close',function(){
-         console.log('close!');
-     })
+     DELIM =Math.ceil(_self.config.tasksNumber/_self.maxTasksLength);
+     POSTFIX =_self.config.tasksNumber-(DELIM-1)*_self.maxTasksLength;
+     //console.log('DELIM: '+DELIM+' POSTFIX: '+POSTFIX);
+     var tn = (DELIM === 1) ? POSTFIX: _self.maxTasksLength;
+     var config =Object.assign(_self.config,{'tasksNumber':tn,'file':'PIXIVER-'+first+'-'+(first+_self.config.tasksNumber-1)});
+
+     App.startPixiverTasks(FIRST,DELIM,POSTFIX,COUNT,config);
  }
+
+/**
+ * 注：此函数内无法使用 _self.maxTasksLength
+ */
+App.startPixiverTasks = function(first,DELIM,POSTFIX,COUNT,config){
+    var Log = require('./../../Log');
+    var log = new Log();
+    var Manager =require('./Manager');
+    var manager = new Manager(config);
+    var _self =this;
+    manager.createPixiverTasks(first);
+    manager.on('message',function(msg){
+        console.log('msg: '+msg);
+    });
+    manager.on('success',function(user){
+        var txt =JSON.stringify(user);
+        log.writeFile(config.file,txt);
+    });
+    manager.once('close',function(){
+        console.log('startPixiverTasks close, COUNT: '+COUNT);
+        var ct = COUNT+1;
+        if(ct === DELIM){
+            console.log('startPixiverTasks 任务结束');
+        }else {
+            var ft =first+1000;
+            var conf =((ct+1) === DELIM) ? Object.assign(config,{'tasksNumber':POSTFIX}): config;
+            //console.log('ft: '+ft+'first: '+first+'_self.maxTasksLength '+_self.maxTasksLength+' conf: '+JSON.stringify(conf));
+            App.startPixiverTasks(ft,DELIM,POSTFIX,ct,conf);
+        }
+
+    })
+}
+
+/**
+ * 注：此函数内无法使用 _self.maxTasksLength
+ */
+App.prototype['createPixiverWorkTasks'] = function(first){
+    var _self =this;
+    var DELIM =0;
+    var POSTFIX =0;
+    var COUNT =0;
+    var FIRST =first;
+
+    DELIM =Math.ceil(_self.config.tasksNumber/_self.maxTasksLength);
+    POSTFIX =_self.config.tasksNumber-(DELIM-1)*_self.maxTasksLength;
+    //console.log('DELIM: '+DELIM+' POSTFIX: '+POSTFIX);
+    var tn = (DELIM === 1) ? POSTFIX: _self.maxTasksLength;
+    var config =Object.assign(_self.config,{'tasksNumber':tn,'file':'WORKS-'+first+'-'+(first+_self.config.tasksNumber-1)});
+
+    App.startPixiverWorkTasks(FIRST,DELIM,POSTFIX,COUNT,config);
+}
+
+App.startPixiverWorkTasks = function(first,DELIM,POSTFIX,COUNT,config){
+    var Log = require('./../../Log');
+    var log = new Log();
+    var Manager =require('./Manager');
+    var manager = new Manager(config);
+    var _self =this;
+    manager.createPixiverWorkTasks(first);
+    manager.on('message',function(msg){
+        console.log('msg: '+msg);
+    });
+    manager.on('success',function(user){
+        var txt =JSON.stringify(user);
+        log.writeFile(config.file,txt);
+    });
+    manager.once('close',function(id){
+        //console.log('get close'+' COUNT '+COUNT+'ft: '+(first+10));
+        var ct = COUNT+1;
+        if(ct === DELIM){
+            console.log(id+' 任务结束');
+        }else {
+            var ft =first+1000;
+            var conf =((ct+1) === DELIM) ? Object.assign(config,{'tasksNumber':POSTFIX}): config;
+            App.startPixiverWorkTasks(ft,DELIM,POSTFIX,ct,conf);
+        }
+
+    })
+}
 
 module.exports = App;

@@ -33,6 +33,7 @@ Manager.prototype.createPixiverTasks = function(first){
         _self =this;
 
     var filter = new Filter(_self.config.filter);
+    //console.log('Manager: first:'+first+ ' config: '+JSON.stringify(_self.config));
 
     for(var i=first;i<first+_self.config.tasksNumber;i++){
         tasks.push(''+i);
@@ -52,7 +53,54 @@ Manager.prototype.createPixiverTasks = function(first){
             if(count === tasks.length){
                 _self.emit('close');
             }
+        },function(){
+            count++;
+            if(count === tasks.length){
+                _self.emit('close');
+            }
         });
+
+        callback();
+    },function(err,callback){
+        if(err){
+            console.log(err);
+        }
+        console.log('fin');
+    });
+
+}
+
+Manager.prototype.createPixiverWorkTasks = function(first){
+    var HTMLParser = require('./HTMLParser'),
+        Filter = require('./Filter'),
+        async = require('async'),
+        tasks =[],
+        count =0,
+        _self =this;
+
+    var filter = new Filter(_self.config.filter);
+
+    for(var i=first;i<first+_self.config.tasksNumber;i++){
+        tasks.push(''+i);
+    }
+    console.log('tasksLength: '+tasks.length);
+    async.mapLimit(tasks,_self.config.async,function(id,callback){
+        var htmlParser = new HTMLParser();
+
+        htmlParser.parsePixiverWorks(id);
+        htmlParser.on('message',function(msg){
+            _self.emit('message',msg);
+        });
+        htmlParser.on('success',function(work){
+            var w = filter.filter(work);
+            if(w.length !== 0){
+                _self.emit('success',work);
+            }
+        });
+        htmlParser.once('close',function(){
+            //console.log('Manager get close signal');
+            _self.emit('close',id);
+        })
 
         callback();
     },function(err,callback){
