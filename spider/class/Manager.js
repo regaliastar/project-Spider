@@ -70,7 +70,10 @@ Manager.prototype.createPixiverTasks = function(first){
 
 }
 
-Manager.prototype.createPixiverWorkTasks = function(first){
+/**
+ * 利用count计数，当任务序列完成后唯一发送close信号
+ */
+Manager.prototype.createPixiverWorkTasks = function(Tasks){
     var HTMLParser = require('./HTMLParser'),
         Filter = require('./Filter'),
         async = require('async'),
@@ -79,10 +82,7 @@ Manager.prototype.createPixiverWorkTasks = function(first){
         _self =this;
 
     var filter = new Filter(_self.config.filter);
-
-    for(var i=first;i<first+_self.config.tasksNumber;i++){
-        tasks.push(''+i);
-    }
+    tasks =Tasks;
     console.log('tasksLength: '+tasks.length);
     async.mapLimit(tasks,_self.config.async,function(id,callback){
         var htmlParser = new HTMLParser();
@@ -97,9 +97,18 @@ Manager.prototype.createPixiverWorkTasks = function(first){
                 _self.emit('success',work);
             }
         });
-        htmlParser.once('close',function(){
-            //console.log('Manager get close signal');
-            _self.emit('close',id);
+        htmlParser.on('error',function(){
+            count++;
+            if(count === tasks.length){
+                _self.emit('close',id);
+            }
+        });
+        htmlParser.on('close',function(){
+            count++;
+            console.log('Manager get close signal  count: '+count);
+            if(count === tasks.length){
+                _self.emit('close',id);
+            }
         })
 
         callback();

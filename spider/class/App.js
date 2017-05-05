@@ -103,12 +103,16 @@ App.startPixiverWorkTasks = function(first,DELIM,POSTFIX,COUNT,config){
     var Manager =require('./Manager');
     var manager = new Manager(config);
     var _self =this;
-    manager.createPixiverWorkTasks(first);
+    var tasks =[];
+    for(var i=first;i<first+config.tasksNumber;i++){
+      tasks.push(''+i);
+    }
+    manager.createPixiverWorkTasks(tasks);
     manager.on('message',function(msg){
         console.log('msg: '+msg);
     });
-    manager.on('success',function(user){
-        var txt =JSON.stringify(user);
+    manager.on('success',function(work){
+        var txt =JSON.stringify(work);
         log.writeFile(config.file,txt);
     });
     manager.once('close',function(id){

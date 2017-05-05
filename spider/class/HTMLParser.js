@@ -70,10 +70,7 @@ HTMLParser.pushPixiverWorks = function(ID,callback){
             $('._image-items').children().each(function(){
                 worksUrls.push('http://www.pixiv.net'+$(this).children('a:first-child').attr('href'));
             });
-            if(worksUrls.length === 0){
-                console.log(ID+' 没有作品');
-                return;
-            }
+
             var NEXT =$('.next').first().children().attr('href');
             var NEXT_URL =seed.split('?')[0]+NEXT;
             if(NEXT){
@@ -100,15 +97,17 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
     var worksList =[];
     var _self =this;
     HTMLParser.pushPixiverWorks(ID,function(worksUrls){
+        if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined'){
+          console.log('send error in parsePixiverWorks');
+           _self.emit('error');
+           return;
+        }
         var tasksLength =worksUrls.length;
+        //console.log('worksUrls.length: '+worksUrls.length);
+        //console.log('worksUrls: '+worksUrls[0]);
         var originLength =tasksLength;
         //console.log('origin length: '+tasksLength);
         async.mapLimit(worksUrls,_self.config.async,function(url,cb){
-            if(!url){
-                return;
-                _self.emit('close');
-            }
-
             HTMLParser.parseWork(url,function(w){
                 //console.log(w);
                 //worksList.push(w);
