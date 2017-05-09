@@ -51,9 +51,9 @@ project-Spider
 	1. 主页：`GET /`
 2. 搜索
 	1. 搜索：`POST /search/:keyword=???`
-	2. 搜索结果:`GET /search/results`
 3. 下载
 	1. 下载：`POST /download`
+	2. 预览: `POST /preview`
 
 > 路由设计采用`REST`风格
 
