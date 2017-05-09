@@ -50,8 +50,6 @@ App.prototype['createPixiverTasks'] = function(first){
  * 注：此函数内无法使用 _self.maxTasksLength
  */
 App.startPixiverTasks = function(first,DELIM,POSTFIX,COUNT,config){
-    var Log = require('./../../Log');
-    var log = new Log();
     var Manager =require('./Manager');
     var manager = new Manager(config);
     var _self =this;
@@ -105,7 +103,7 @@ App.startPixiverWorkTasks = function(first,DELIM,POSTFIX,COUNT,config){
         //console.log('get close'+' COUNT '+COUNT+'ft: '+(first+10));
         var ct = COUNT+1;
         if(ct === DELIM){
-            console.log(id+' 任务结束');
+            console.log('startPixiverWorkTasks 任务结束');
         }else {
             var ft =first+1000;
             var conf =((ct+1) === DELIM) ? Object.assign(config,{'tasksNumber':POSTFIX}): config;
