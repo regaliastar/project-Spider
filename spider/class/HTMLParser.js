@@ -90,7 +90,6 @@ HTMLParser.pushPixiverWorks = function(ID,callback){
  * @see HTMLParser.pushPixiverWorks - 严重依赖关系
  * @see HTMLParser.parseWork - 严重依赖关系
  * @see HTMLParser.parseMutilWork - 严重依赖关系
- * @callback {Work[]} {MutilWork[]}
  */
 HTMLParser.prototype.parsePixiverWorks = function(ID){
     var async =require('async');
@@ -300,6 +299,7 @@ HTMLParser.fetch = function(header,callback,cb2){
 		if(err){
             if(cb2){
                 cb2();
+                console.log(err);
             }
 			//console.log(err);
 			log.error(err);

@@ -56,13 +56,6 @@ App.startPixiverTasks = function(first,DELIM,POSTFIX,COUNT,config){
     var manager = new Manager(config);
     var _self =this;
     manager.createPixiverTasks(first);
-    manager.on('message',function(msg){
-        console.log('msg: '+msg);
-    });
-    manager.on('success',function(user){
-        var txt =JSON.stringify(user);
-        log.writeFile(config.file,txt);
-    });
     manager.once('close',function(){
         console.log('startPixiverTasks close, COUNT: '+COUNT);
         var ct = COUNT+1;
@@ -108,13 +101,6 @@ App.startPixiverWorkTasks = function(first,DELIM,POSTFIX,COUNT,config){
       tasks.push(''+i);
     }
     manager.createPixiverWorkTasks(tasks);
-    manager.on('message',function(msg){
-        console.log('msg: '+msg);
-    });
-    manager.on('success',function(work){
-        var txt =JSON.stringify(work);
-        log.writeFile(config.file,txt);
-    });
     manager.once('close',function(id){
         //console.log('get close'+' COUNT '+COUNT+'ft: '+(first+10));
         var ct = COUNT+1;
