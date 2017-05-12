@@ -20,5 +20,8 @@ module.exports ={
     /**
      * 当前开发环境
      */
-    ENV:'production'
+    ENV:'production',
+
+    mongodb: 'mongodb://localhost:27017/project-Spider'
+
 }
