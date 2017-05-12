@@ -2,6 +2,7 @@ var express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
+    expressSession = require('express-session'),
     routes = require('./routes/index'),
     config = require('./default');
 
@@ -11,6 +12,11 @@ app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs');
 
 app.use(cookieParser(config.cookieSecret));
+app.use(expressSession({
+	secret:config.sessionSecret,
+	cookie:{maxAge:config.sessionMaxAge}
+}));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname,'public')));
 

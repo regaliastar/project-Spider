@@ -412,9 +412,10 @@ function moveToDownload(){
 				dynamic_picture:txtDynamicPicture
 			},
 			success:function(data){
-				console.log('success');
+				console.log(data);
+				location.href = 'http://localhost:3000/download';
 			},
-			error:function(){
+			error:function(err){
 				console.log('err');
 			}
 		});

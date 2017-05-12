@@ -5,7 +5,18 @@ var router = express.Router();
 
 router.post('/',function(req,res){
     console.log(req.body);
-    res.render('index');
+    var items =[{url:'url1'},{url:'url2'}];
+    req.session.items =items;
+    req.session.save();
+    res.end('ok');
 });
+
+router.get('/',function(req,res,next){
+    if(req.session.items){
+        res.render('download',{items:req.session.items});
+    }else {
+        next();
+    }
+})
 
 module.exports = router;
