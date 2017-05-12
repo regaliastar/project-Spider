@@ -37,7 +37,7 @@ d.on('error',function(url){
 d.on('message',function(msg){
 console.log(msg);
 })
-d.on('finish',function(completed,ready,error){
+d.on('close',function(completed,ready,error){
     console.log('所有资源下载完成');
     console.log('已完成：'+completed);
     console.log('还在等待：'+ready);
@@ -103,12 +103,12 @@ parser.on('message',function(msg){
     console.log('msg: '+msg);
 });
 
-parser.on('finish',function(worksList){
+parser.on('close',function(worksList){
     for(var i in worksList){
         log.write(JSON.stringify(worksList[i]));
     }
 })*/
-
+/*
 var HTMLParser = require('./class/HTMLParser');
 var parser =new HTMLParser();
 var Log =require('./../Log');
@@ -117,4 +117,53 @@ parser.parseGlobalRank(function(worksList){
     for(var i in worksList){
         log.write(JSON.stringify(worksList[i]));
     }
-})
+})*/
+/*
+var Log =require('./../Log');
+var log =new Log();
+var App = require('./class/App');
+var config = {
+    'async': 2,                 //并发量
+    'tasksNumber': 2100,         //任务数量
+    'filter':{'bookmarket':0,'follow':0,'comment':0,'praise':0,'pageView':0}    //默认过滤
+}
+var app = new App(config);
+app.createPixiverTasks(2482417);*/
+
+/*
+var Log =require('./../Log');
+var log =new Log();
+var App = require('./class/App');
+var mongoose = require('mongoose');
+var mongo = require('mongo');
+var config = {
+    'async': 2,                 //并发量
+    'tasksNumber': 25,         //任务数量
+    'filter':{'bookmarket':0,'follow':0,'comment':0,'praise':0,'pageView':0}    //默认过滤
+}
+var app1 = new App(config);
+//5481866
+app1.createPixiverWorkTasks(5481846);
+var app2 = new App(config);
+app2.createPixiverTasks(5481846);
+*/
+var connfig = require('./../default.js');
+var mongoose = require('mongoose');
+mongoose.connect(config.mongodb);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  console.log("数据库成功开启");
+});
+
+var Pixiver = require('./class/Pixiver');
+var Work = require('./class/Work').Work;
+var MutilWork = require('./class/Work').MutilWork;
+var Work = require('./class/')
+var p = new pixiver('11','touxiang','22','33','44');
+var w = new Work('wn',['tag1','tag2'],'1111','55','11','s_a','b_a');
+var mw = new MutilWork('wn',['tag1','tag2'],'1111','55','11','s_a','b_a',['a1','a2','a3']);
+
+var Operator = require('./../lib/operator');
+var op1 = new Operator({schema:'Pixiver'});
+op1.save(p);

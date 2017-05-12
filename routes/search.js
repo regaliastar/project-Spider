@@ -3,12 +3,8 @@ var express = require('express'),
 
 var router = express.Router();
 
-router.get('/',function(req,res){
-	res.render('index');
-});
-
-router.post('search/:keyword',function(req,res){
-  console.log(keyword);
+router.post('/search',function(req,res){
+  console.log(req.body);
   res.end('success');
 });
 

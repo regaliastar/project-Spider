@@ -57,6 +57,17 @@ Log.prototype.write = function(){
 }
 
 /**
+ * 自定义写文件
+ */
+Log.prototype.writeFile = function(path,txt){
+	fs.appendFile('./'+path+'.log',txt+'\n','utf-8',function(err){
+		if(err){
+			throw err;
+		}
+	});
+}
+
+/**
  * 用于记录一般信息，INFO级别，主要为通知信息
  * 传入任意个字符串，将其按空格分开，并按日期作为文件名写在调用路径的logs目录下
  *

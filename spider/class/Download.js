@@ -6,7 +6,7 @@ var EventEmitter = require('events').EventEmitter;
  *
  * 下载类，下载工具的提供者
  * @extends EventEmitter
- * @param 定义事件  'error','message','finish'
+ * @param 定义事件  'error','message','close'
  */
 class Download extends EventEmitter{
     /**
@@ -135,7 +135,7 @@ Download.prototype['start'] = function(){
                          */
                         _self.emit('error',url+' 无法解析');
                         if(_self.ready ===0){
-                            _self.emit('finish',_self.completed,_self.ready,_self.error);
+                            _self.emit('close',_self.completed,_self.ready,_self.error);
                         }
                         return;
                     })
@@ -147,7 +147,7 @@ Download.prototype['start'] = function(){
                              * 发射结束事件
                              */
                             if(_self.ready ===0){
-                                _self.emit('finish',_self.completed,_self.ready,_self.error);
+                                _self.emit('close',_self.completed,_self.ready,_self.error);
                             }
                         });
 

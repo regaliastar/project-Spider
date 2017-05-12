@@ -1,7 +1,6 @@
 module.exports = function(app){
 	app.get('/',require('./home'));
-
-	app.use(function(req,res){
-		res.send('404');
-	})
+	app.use('/download', require('./download'));
+	app.use('/preview', require('./preview'));
+	app.use('/search', require('./search'));
 };

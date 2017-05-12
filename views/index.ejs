@@ -269,35 +269,36 @@ function moveToDownload(){
 				    <div class="testimonial-bottom">
 						<div class="pxer-print" v-show="showAll ||['finish'].indexOf(state)!==-1">
 						    <div class="left pp-filter pxer-class-fieldset">
+							<form onsubmit="return false" id="downLoadForm" name="terminal">
 						        <div class="ppf-title pcf-title">过滤选项</div>
 						        <div class="ppf-form">
 						            <div class="form-group">
-						                <label>总分 ≥</label>
-						                <input type="number" class="form-control" v-model.number="pxer.pfConfig.score" />
+						                <label>点赞数 ≥</label>
+						                <input type="number" class="form-control" name="dianZhanShu" v-model.number="pxer.pfConfig.score" />
 						            </div>
 						            <div class="form-group">
 						                <label>浏览数 ≥</label>
-						                <input type="number" class="form-control" v-model.number="pxer.pfConfig.view" />
+						                <input type="number" class="form-control" name="liuLanShu" v-model.number="pxer.pfConfig.view" />
 						            </div>
 						            <div class="form-group">
-						                <label>平均分 ≥</label>
-						                <input type="number" class="form-control" v-model.number="pxer.pfConfig.avg" />
+						                <label>作者ID</label>
+						                <input type="number" class="form-control" name="zuoZheID" v-model.number="pxer.pfConfig.avg" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>不能</strong>含有以下<strong>任意一个</strong>标签</label>
-						                <input v-model="no_tag_any" type="text" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input v-model="no_tag_any" type="text" name="noAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>不能同时</strong>含有以下<strong>所有</strong>标签</label>
-						                <input v-model="no_tag_every" type="text" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input v-model="no_tag_every" type="text" name="noAllLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>必须</strong>含有以下<strong>任意一个</strong>标签</label>
-						                <input v-model="has_tag_some" type="text" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input v-model="has_tag_some" type="text" name="yesAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>必须同时</strong>含有以下<strong>所有</strong>标签</label>
-						                <input v-model="has_tag_every" type="text" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input v-model="has_tag_every" type="text" name="yesAllLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						        </div>
 						    </div>
@@ -307,23 +308,14 @@ function moveToDownload(){
 						        <div class="ppp-form">
 						            <div class="form-group">
 						                <label>单张插画</label>
-						                <select class="form-control" v-model="pxer.ppConfig.illust_single">
-						                    <option value="max">最大</option>
-						                    <option value="600p">600p</option>
-						                    <option value="no">不输出</option>
-						                </select>
-						            </div>
-						            <div class="form-group">
-						                <label>单张插画</label>
-						                <select class="form-control" v-model="pxer.ppConfig.illust_single">
-						                    <option value="max">最大</option>
+						                <select class="form-control" name="singlePicture" v-model="pxer.ppConfig.illust_single">
 						                    <option value="600p">600p</option>
 						                    <option value="no">不输出</option>
 						                </select>
 						            </div>
 						            <div class="form-group">
 						                <label>多张插画</label>
-						                <select class="form-control" v-model="pxer.ppConfig.illust_multiple">
+						                <select class="form-control" name="muchPicture" v-model="pxer.ppConfig.illust_multiple">
 						                    <option value="max">最大</option>
 						                    <option value="1200p">1200p</option>
 						                    <option value="cover_600p">仅封面（600p）</option>
@@ -331,16 +323,8 @@ function moveToDownload(){
 						                </select>
 						            </div>
 						            <div class="form-group">
-						                <label>单张漫画</label>
-						                <select class="form-control" v-model="pxer.ppConfig.manga_single">
-						                    <option value="max">最大</option>
-						                    <option value="600p">600p</option>
-						                    <option value="no">不输出</option>
-						                </select>
-						            </div>
-						            <div class="form-group">
 						                <label>多张漫画</label>
-						                <select class="form-control" v-model="pxer.ppConfig.manga_multiple">
+						                <select class="form-control" name="muchCartoon" v-model="pxer.ppConfig.manga_multiple">
 						                    <option value="max">最大</option>
 						                    <option value="1200p">1200p</option>
 						                    <option value="cover_600p">仅封面（600p）</option>
@@ -349,7 +333,7 @@ function moveToDownload(){
 						            </div>
 						            <div class="form-group">
 						                <label>动图</label>
-						                <select class="form-control" v-model="printConfigUgoira">
+						                <select class="form-control" name="dynamicPicture" v-model="printConfigUgoira">
 						                    <option value="max-no">最大压缩包</option>
 						                    <option value="600p-no">600p压缩包</option>
 						                    <option value="max-yes">最大压缩包 + 参数</option>
@@ -357,18 +341,97 @@ function moveToDownload(){
 						                    <option value="no-no">不输出</option>
 						                </select>
 						            </div>
+
+
+
 						            <div class="pppf-buttons">
 						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
-						                <button class="btn btn-outline-info" @click="count">Preview</button>
-						                <button class="btn btn-outline-success" @click="pxer.printWorks()">Download</button>
+						                <button class="btn btn-outline-info" name="buttonPreview" ">Preview</button>
+						                <button class="btn btn-outline-success" name="buttonDownload" ">Download</button>
+
 						            </div>
+												<br></br>
+												<div class="pi-item">
+													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
+														<table class="table">
+															<tr>
+																<td>总任务数：</td>
+																<td v-text="taskCount"></td>
+															</tr>
+															<tr>
+																<td>已完成：</td>
+																<td v-text="finishCount>=0?finishCount:'-'"></td>
+															</tr>
+															<tr>
+																<td>剩余时间：</td>
+				 												<td v-text="forecastTime>=0?formatTime(forecastTime):'-'"></td>
+		 												</tr>
+													</table>
+												</div>
 						        </div>
+							</form>
 						    </div>
 						</div>
 					</div>
 			</div>
 		</div>
 	</div>
+	<!--end function -->
+	<script>
+	var terminalForm=document.terminal;
+
+		function bottonClickDownload(){
+		   var txtDianZanShu=""+terminalForm.dianZhanShu.value;
+		   var txtLiuLanShu=""+terminalForm.liuLanShu.value;
+		   var txtZuoZheID=''+terminalForm.zuoZheID.value;
+
+		   var tempNoAnyLable=terminalForm.noAnyLable.value.split(' ');
+		   var tempNoAllLable=terminalForm.noAllLable.value.split(' ');
+		   var tempYesAnyLable=terminalForm.yesAnyLable.value.split(' ');
+		   var tempYesAllLable=terminalForm.yesAllLable.value.split(' ');
+
+		   var txtSinglePicture=terminalForm.singlePicture.value;
+		   var txtMuchlePicture=terminalForm.muchPicture.value;
+		   var txtMuchCartoon=terminalForm.muchCartoon.value;
+		   var txtDynamicPicture=terminalForm.dynamicPicture.value;
+
+		   $.ajax({
+			type:'post',
+			url:'/download',
+			data:{
+				praise:txtDianZanShu,
+				pageView:txtLiuLanShu,
+				id:txtZuoZheID,
+				has_tag_every:tempYesAllLable,
+				has_tag_some:tempYesAnyLable,
+				no_tag_any:tempNoAnyLable,
+				no_tag_every:tempNoAllLable,
+				single_picrure:txtSinglePicture,
+				muchle_picture:txtMuchlePicture,
+				much_cartoon:txtMuchCartoon,
+				dynamic_picture:txtDynamicPicture
+			},
+			success:function(data){
+				console.log(data);
+				location.href = 'http://localhost:3000/download';
+			},
+			error:function(err){
+				console.log('err');
+			}
+		});
+
+		}
+
+
+		function bottonClickPreview(){
+		var txtTotalAssignment;
+		var txtDoneAssignment;
+		var leftTime;
+		alert("hh");
+		}
+		terminalForm.buttonDownload.addEventListener("click",bottonClickDownload);
+		terminalForm.buttonPreview.addEventListener("click",bottonClickPreview);
+	</script>
 	<!--end-testimonial-->
 	<!--start-footer-->
 	<div class="footer">

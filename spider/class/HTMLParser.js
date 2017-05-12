@@ -21,15 +21,16 @@ HTMLParser.defaultConfig = function(){
         "async" :   3//默认异步数量
     }
 }
+
 /**
  * @param ID format: '1184799';
  * 以不伪装的形式访问作者信息，得到
  * 作品数，订阅数，评论数(bookmarket,follow,comment)，并传入回调函数
  *
  * @see HTMLParser.fetch
- * @callback callback(bookmarket,follow,comment)
+ * @callback callback(bookmarket,follow,comment)   cb2 - 异常处理
  */
-HTMLParser.parsePixiver = function(ID,callback){
+HTMLParser.parsePixiver = function(ID,callback,cb2){
     var seed = 'http://www.pixiv.net/member.php?id='+ID;
     var avator,     //头像
         bookmarket, //作品数
@@ -39,13 +40,13 @@ HTMLParser.parsePixiver = function(ID,callback){
 
     HTMLParser.fetch(seed,function($){
         var children_list = $('.count-container').children();
-        avator = $('.usericon').children('img:first-child').attr('src');
+        avator = $('.usericon').children('img:first-child').attr('src') || '';
         bookmarket = children_list.eq(0).children('a:first-child').text().trim() || '0';
         follow = children_list.eq(1).children('a:first-child').text().trim() || '0';
         comment = children_list.eq(2).children('a:first-child').text().trim() || '0';
         var p = new pixiver(ID,avator,bookmarket,follow,comment);
         callback(p);
-    })
+    },cb2)
 }
 
 /**
@@ -63,10 +64,13 @@ HTMLParser.pushPixiverWorks = function(ID,callback){
         HTMLParser.fetch(header,function($){
             /**
              * 将页面内的URL装入容器之中
+             * 若没有作品，直接返回
              */
+
             $('._image-items').children().each(function(){
                 worksUrls.push('http://www.pixiv.net'+$(this).children('a:first-child').attr('href'));
             });
+
             var NEXT =$('.next').first().children().attr('href');
             var NEXT_URL =seed.split('?')[0]+NEXT;
             if(NEXT){
@@ -75,7 +79,6 @@ HTMLParser.pushPixiverWorks = function(ID,callback){
             }else {
                 callback(worksUrls);
             }
-            return true;
         });
     }
     var header =require('./../requestHeader')(seed);
@@ -87,30 +90,44 @@ HTMLParser.pushPixiverWorks = function(ID,callback){
  * @see HTMLParser.pushPixiverWorks - 严重依赖关系
  * @see HTMLParser.parseWork - 严重依赖关系
  * @see HTMLParser.parseMutilWork - 严重依赖关系
- * @callback {Work[]} {MutilWork[]}
  */
 HTMLParser.prototype.parsePixiverWorks = function(ID){
     var async =require('async');
     var worksList =[];
     var _self =this;
     HTMLParser.pushPixiverWorks(ID,function(worksUrls){
+        if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined'){
+          console.log('send error in parsePixiverWorks');
+           _self.emit('error');
+           return;
+        }
         var tasksLength =worksUrls.length;
+        //console.log('worksUrls.length: '+worksUrls.length);
+        //console.log('worksUrls: '+worksUrls[0]);
         var originLength =tasksLength;
         //console.log('origin length: '+tasksLength);
         async.mapLimit(worksUrls,_self.config.async,function(url,cb){
             HTMLParser.parseWork(url,function(w){
                 //console.log(w);
-                worksList.push(w);
+                //worksList.push(w);
                 tasksLength--;
                 _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
-                if(!tasksLength)    _self.emit('finish',worksList);
+                _self.emit('success',w);
+                if(tasksLength === 0)    _self.emit('close');
+            },function(){
+                tasksLength--;
+                if(tasksLength === 0)    _self.emit('close');
             });
             HTMLParser.parseMutilWork(url,function(mw){
                 //console.log(mw);
-                worksList.push(mw);
+                //worksList.push(mw);
                 tasksLength--;
                 _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
-                if(!tasksLength)    _self.emit('finish',worksList);
+                _self.emit('success',mw);
+                if(tasksLength === 0)    _self.emit('close');
+            },function(){
+                tasksLength--;
+                if(tasksLength === 0)    _self.emit('close');
             });
 
             cb();
@@ -118,7 +135,7 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
             if(err){
                 console.log(err);
             }
-            console.log('parsePixiverWorks fin');
+            console.log(ID+' parsePixiverWorks fin');
         });
     });
 }
@@ -187,7 +204,7 @@ HTMLParser.initWork = function($,callback){
  * @param {string}  big_address     大图地址
  * @callback     {Work}   callback(w)
  */
-HTMLParser.parseWork = function(url,callback){
+HTMLParser.parseWork = function(url,callback,cb2){
     var header = require('./../requestHeader')(url);
     HTMLParser.fetch(header,function($){
         var workName,
@@ -206,7 +223,7 @@ HTMLParser.parseWork = function(url,callback){
             var w = new Work(workName,Util['tags'],Util['pageView'],Util['praise'],Util['pixiver'],small_address,big_address);
             callback(w);
         })
-    })
+    },cb2)
 }
 
 /**
@@ -223,7 +240,7 @@ HTMLParser.parseWork = function(url,callback){
  * @param {string}  next            存放所有画的页面的URL
  * @callback   {MutilWork}     callback(mw);
  */
-HTMLParser.parseMutilWork = function(url,callback){
+HTMLParser.parseMutilWork = function(url,callback,cb2){
     var header = require('./../requestHeader')(url);
     HTMLParser.fetch(header,function($){
         var tags = [],
@@ -256,7 +273,7 @@ HTMLParser.parseMutilWork = function(url,callback){
                 });
             })
         })
-    })
+    },cb2)
 }
 
 /**
@@ -272,7 +289,7 @@ HTMLParser.prototype.parseSearch = function(url,filter,callback){
  * 传入请求头,取得网页并将网页解析成支持JQuery选择器的$，并将待处理的数据传递给回调函数处理
  * @callback callback($)
  */
-HTMLParser.fetch = function(header,callback){
+HTMLParser.fetch = function(header,callback,cb2){
     var request = require('request'),
 	    cheerio = require('cheerio'),
 	    Log = require('./../../log');
@@ -280,7 +297,11 @@ HTMLParser.fetch = function(header,callback){
 
 	request(header,function(err,res){
 		if(err){
-			console.log(err);
+            if(cb2){
+                cb2();
+                console.log(err);
+            }
+			//console.log(err);
 			log.error(err);
 			return;
 		}
@@ -289,6 +310,9 @@ HTMLParser.fetch = function(header,callback){
 		callback($);
 	}).on('error',function(){
 		//监听error事件，当错误发生时代码可继续执行而不中断
+        if(cb2){
+            cb2();
+        }
 		log.error('error! request in fetch.js');
 	})
 }

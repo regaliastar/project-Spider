@@ -3,13 +3,13 @@
 /**
  * @author regaliastar
  *
- * @param workName      作品名
- * @param tags          TAG
- * @param pageView      浏览量
- * @param praise        点赞数
- * @param pixiver       作者
- * @param small_address 小图地址
- * @param big_address   大图地址
+ * @param {string} workName      作品名
+ * @param {string[]} tags          TAG
+ * @param {string} pageView      浏览量
+ * @param {string} praise        点赞数
+ * @param {string} pixiver       作者
+ * @param {string} small_address 小图地址
+ * @param {string} big_address   大图地址
  */
 class Work{
     constructor(workName,tags,pageView,praise,pixiver,small_address,big_address){
@@ -28,7 +28,7 @@ Work.prototype.print = function(){
 }
 
 /**
- * box_address：数组变量，用于存放每一张漫画的地址
+ * @param {string[]} box_address：数组变量，用于存放每一张漫画的地址
  * @see Work
  */
 class MutilWork extends Work {
