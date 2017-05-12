@@ -22,6 +22,6 @@ module.exports ={
      */
     ENV:'production',
 
-    mongodb: 'mongodb://localhost:27017/project-Spider'
+    mongodb: 'mongodb://localhost/project-Spider'
 
 }
