@@ -147,7 +147,8 @@ app1.createPixiverWorkTasks(5481846);
 var app2 = new App(config);
 app2.createPixiverTasks(5481846);
 */
-var connfig = require('./../default.js');
+
+var config = require('./../default.js');
 var mongoose = require('mongoose');
 mongoose.connect(config.mongodb);
 var db = mongoose.connection;
@@ -156,14 +157,35 @@ db.once('open', function (callback) {
   console.log("数据库成功开启");
 });
 
-var Pixiver = require('./class/Pixiver');
-var Work = require('./class/Work').Work;
-var MutilWork = require('./class/Work').MutilWork;
-var Work = require('./class/')
-var p = new pixiver('11','touxiang','22','33','44');
-var w = new Work('wn',['tag1','tag2'],'1111','55','11','s_a','b_a');
-var mw = new MutilWork('wn',['tag1','tag2'],'1111','55','11','s_a','b_a',['a1','a2','a3']);
+var Pixiverclass = require('./class/Pixiver');
+var Workclass = require('./class/Work').Work;
+var MutilWorkclass = require('./class/Work').MutilWork;
+
+var p = new Pixiverclass('11','touxiang','22','33','44');
+var w = new Workclass('wn',['tag1','tag2'],'1111','55','11','s_a','b_a');
+var w2 = new Workclass('w2',['tag1','tag2'],'1111','55','11','s_a','b_a')
+var mw = new MutilWorkclass('wn',['tag1','tag2'],'1111','55','11','s_a','b_a',['a1','a2','a3']);
 
 var Operator = require('./../lib/operator');
-var op1 = new Operator({schema:'Pixiver'});
-op1.save(p);
+var op1 = new Operator({'schema':'Pixiver'});
+var op2 = new Operator({'schema':'Work'});
+//op1.save(p);
+//op1.print({id:'11'});
+//op2.save(w);
+//op2.save(w2);
+/*
+setTimeout(function(){
+    op2.find({small_address:'s_a'},function(items){
+        console.log(JSON.stringify(items));
+        db.close();
+    });
+},1000);*/
+/*
+op2.update({pageView:'1111'},{pixiver:'123',big_address:'b_b'},function(items){
+    console.log(JSON.stringify(items));
+    db.close();
+})*/
+op2.remove({workName:'w2'},function(items){
+    console.log(JSON.stringify(items));
+    db.close();
+})
