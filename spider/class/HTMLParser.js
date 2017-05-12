@@ -172,12 +172,19 @@ HTMLParser.initWork = function($,callback){
         tags = [],
         pageView,
         praise,
-        pixiver;
+        pixiver,
+        Log = require('./../../log');
+    var log = new Log();
+    try {
+        Util['pixiver'] = $('.user-link').first().attr('href').split('=')[1];
+        Util['pageView'] = $('.view-count').text() || '0';
+        Util['praise'] = $('.rated-count').text() || '0';
+        var tag_length = $('.tags').children().length;
+    } catch (e) {
+        log.error(e);
+        return;
+    }
 
-    Util['pixiver'] = $('.user-link').first().attr('href').split('=')[1];
-    Util['pageView'] = $('.view-count').text() || '0';
-    Util['praise'] = $('.rated-count').text() || '0';
-    var tag_length = $('.tags').children().length;
     $('.tags').children().each(function(){
         let tag = $(this).children('.text').text();
         tag_length --;

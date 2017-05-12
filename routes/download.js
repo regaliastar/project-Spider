@@ -1,5 +1,6 @@
 var express = require('express'),
- path = require('path');
+    path = require('path'),
+    Operator = require('./../lib/operator');
 
 var router = express.Router();
 

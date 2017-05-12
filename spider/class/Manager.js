@@ -26,14 +26,17 @@ Manager.defaultConfig = function(){
 Manager.prototype.createPixiverTasks = function(first){
 
     var HTMLParser = require('./HTMLParser'),
+        Pixiver = require('./Pixiver'),
         Log = require('./../../Log'),
         Filter = require('./Filter'),
         async = require('async'),
+        Operator = require('./../../lib/operator'),
         tasks =[],
         count =0,
         _self =this;
 
     var filter = new Filter(_self.config.filter);
+    var op = new Operator({'schema':'Pixiver'});
     var log = new Log();
     //console.log('Manager: first:'+first+ ' config: '+JSON.stringify(_self.config));
 
@@ -49,7 +52,10 @@ Manager.prototype.createPixiverTasks = function(first){
             var u = filter.filterPixiver(user);
             if(u.length !==0){
                 //_self.emit('success',u);
-                log.writeFile(_self.config.file,JSON.stringify(u));
+                //log.writeFile(_self.config.file,JSON.stringify(u));
+                u.map(function(item){
+                    if(item instanceof Pixiver) op.save(item);
+                });
             }
             if(count === tasks.length){
                 _self.emit('close');
@@ -77,14 +83,19 @@ Manager.prototype.createPixiverTasks = function(first){
  */
 Manager.prototype.createPixiverWorkTasks = function(Tasks){
     var HTMLParser = require('./HTMLParser'),
+        Work = require('./Work').Work,
+        MutilWork = require('./Work').MutilWork,
         Log = require('./../../Log'),
         Filter = require('./Filter'),
         async = require('async'),
+        Operator = require('./../../lib/operator'),
         tasks =[],
         count =0,
         _self =this;
 
     var filter = new Filter(_self.config.filter);
+    var opw = new Operator({'schema':'Work'});
+    var opmw = new Operator({'schema':'MutilWork'});
     var log = new Log();
     tasks =Tasks;
     console.log('tasksLength: '+tasks.length);
@@ -99,8 +110,12 @@ Manager.prototype.createPixiverWorkTasks = function(Tasks){
         htmlParser.on('success',function(work){
             var w = filter.filter(work);
             if(w.length !== 0){
-              var txt =JSON.stringify(work);
-              log.writeFile(_self.config.file,txt);
+              //var txt =JSON.stringify(work);
+              //log.writeFile(_self.config.file,txt);
+              w.map(function(item){
+                  if(item instanceof Work)  opw.save(item);
+                  if(item instanceof MutilWork) opmw.save(item);
+              })
             }
         });
         htmlParser.on('error',function(){

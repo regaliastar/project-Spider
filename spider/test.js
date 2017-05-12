@@ -147,7 +147,7 @@ app1.createPixiverWorkTasks(5481846);
 var app2 = new App(config);
 app2.createPixiverTasks(5481846);
 */
-
+/*
 var config = require('./../default.js');
 var mongoose = require('mongoose');
 mongoose.connect(config.mongodb);
@@ -173,19 +173,46 @@ var op2 = new Operator({'schema':'Work'});
 //op1.print({id:'11'});
 //op2.save(w);
 //op2.save(w2);
-/*
+
 setTimeout(function(){
     op2.find({small_address:'s_a'},function(items){
         console.log(JSON.stringify(items));
         db.close();
     });
-},1000);*/
-/*
+},1000);
+
 op2.update({pageView:'1111'},{pixiver:'123',big_address:'b_b'},function(items){
     console.log(JSON.stringify(items));
     db.close();
-})*/
+})
 op2.remove({workName:'w2'},function(items){
     console.log(JSON.stringify(items));
     db.close();
-})
+})*/
+
+
+var config = require('./../default.js');
+var mongoose = require('mongoose');
+mongoose.connect(config.mongodb);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  console.log("数据库成功开启");
+});
+
+
+var GetSchema = require('./../lib/mongo');
+var BOOK = GetSchema('Pixiver');
+BOOK.find({'bookmarket':{$gte:1}},function(err,items){
+    if(!err){
+        var length =items.length;
+        console.log('共有 '+length);
+        items.map(function(item){
+            console.log(item);
+            length--;
+            if(!length) db.close();
+        })
+    }else {
+        console.log(err);
+    }
+});
