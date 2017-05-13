@@ -118,6 +118,8 @@ Filter.filterInfo =function(worksList ,{praise=0,praise_pro=0,pageView=0}){
  */
 Filter.filterTag =function(worksList ,{has_tag_every,has_tag_some,no_tag_any,no_tag_every}){
     var passWorks = worksList;
+    console.log('过滤数: '+worksList.length);
+    if(passWorks.length === 0)  return;
     if(has_tag_every && has_tag_every.length !==0){
         passWorks =passWorks.filter(function(works){
             return has_tag_every.every(item => works.tags.indexOf(item)!==-1);

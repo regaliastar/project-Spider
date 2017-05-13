@@ -201,8 +201,10 @@ db.once('open', function (callback) {
 });
 
 
-var GetSchema = require('./../lib/mongo');
-var BOOK = GetSchema('Pixiver');
+var GetModel = require('./../lib/mongo');
+var BOOK = GetModel('Pixiver');
+var WorkModel = GetModel('Work');
+/*
 BOOK.find({'bookmarket':{$gte:1}},function(err,items){
     if(!err){
         var length =items.length;
@@ -215,4 +217,45 @@ BOOK.find({'bookmarket':{$gte:1}},function(err,items){
     }else {
         console.log(err);
     }
-});
+});*/
+/*
+BOOK.find({id:''}).limit(10).sort({'follow':-1}).exec(function(err,res){
+  if(err){
+    console.log(err);
+  }else {
+    //console.log(Object.prototype.toString.call(res));
+    console.log('Res: '+res);
+    db.close();
+  }
+})*/
+var condition ={
+    'praise': {$gte:100},
+    'pageView': {$gte:100}
+}
+var output=['small_address'];
+
+var query =WorkModel.find(condition);
+query.select('small_address');
+query.limit(100);
+query.sort({pixiver:-1});
+
+query.exec(function(err,resultSet){
+  if(err){
+    console.log(err);
+  }else {
+    //let items =filter.filter(resultSet);
+    console.log('items: '+resultSet);
+    console.log('length: '+resultSet.length);
+    db.close();
+  }
+})
+/*
+var Operator =require('./../lib/operator');
+var opw = new Operator({'schema':'Work'});
+var opmw = new Operator({'schema':'MutilWork'});
+opw.remove({'pageView':{$gte:0}},function(){
+  console.log('w over');
+})
+opmw.remove({'pageView':{$gte:0}},function(){
+  console.log('w over');
+})*/

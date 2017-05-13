@@ -6,6 +6,14 @@ var express = require('express'),
     routes = require('./routes/index'),
     config = require('./default');
 
+var mongoose = require('mongoose');
+mongoose.connect(config.mongodb);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  console.log("数据库成功开启");
+});
+
 var app = express();
 
 app.set('views',path.join(__dirname,'views'));

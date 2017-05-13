@@ -9,8 +9,11 @@
     <body>
         <div class="container">
             <ul>
+              <p>共计: <%=length %></p>
+            </ul>
+            <ul>
                 <%items.forEach(function(item){ %>
-                    <li><%= item.url%></li>
+                    <li><%= item.big_address%></li>
                 <%})%>
             </ul>
         </div>

@@ -2,22 +2,19 @@
   "name": "project-spider",
   "version": "1.0.0",
   "description": {},
-  "dependencies":{
-    "request": "2.79.0",
-    "express": "4.14.0",
-    "express-session": "1.14.2",
+  "dependencies": {
+    "alidayu-node": "1.0.3",
     "async": "2.1.4",
     "body-parser": "1.15.2",
+    "cheerio": "0.22.0",
+    "cookie-parser": "^1.4.3",
+    "ejs": "2.5.6",
+    "express": "4.14.0",
+    "express-session": "1.14.2",
     "mongodb": "2.2.16",
     "mongoose": "4.7.4",
-    "supervisor": "0.12.0",
-    "alidayu-node": "1.0.3",
-    "cheerio": "0.22.0",
-<<<<<<< HEAD
-    "ejs": "2.5.6"
-=======
-    "ejs": "3.10.9"
->>>>>>> 2a1c12d9c32417cb7e5c034e1b114898b9011839
+    "request": "2.79.0",
+    "supervisor": "0.12.0"
   },
   "main": "app.js",
   "scripts": {

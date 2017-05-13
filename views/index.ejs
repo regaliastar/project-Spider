@@ -379,16 +379,24 @@ function moveToDownload(){
 	<!--end function -->
 	<script>
 	var terminalForm=document.terminal;
+	var arrToJson = function(a){
+	  var json = {};
+	  for(var i=0;i<a.length;i++)
+	  {
+	      json[i]=a[i];
+	  }
+	  return json;
+	}
 
 		function bottonClickDownload(){
 		   var txtDianZanShu=""+terminalForm.dianZhanShu.value;
 		   var txtLiuLanShu=""+terminalForm.liuLanShu.value;
 		   var txtZuoZheID=''+terminalForm.zuoZheID.value;
 
-		   var tempNoAnyLable=terminalForm.noAnyLable.value.split(' ');
-		   var tempNoAllLable=terminalForm.noAllLable.value.split(' ');
-		   var tempYesAnyLable=terminalForm.yesAnyLable.value.split(' ');
-		   var tempYesAllLable=terminalForm.yesAllLable.value.split(' ');
+		   var tempNoAnyLable=terminalForm.noAnyLable.value;
+		   var tempNoAllLable=terminalForm.noAllLable.value;
+		   var tempYesAnyLable=terminalForm.yesAnyLable.value;
+		   var tempYesAllLable=terminalForm.yesAllLable.value;
 
 		   var txtSinglePicture=terminalForm.singlePicture.value;
 		   var txtMuchlePicture=terminalForm.muchPicture.value;
@@ -402,10 +410,10 @@ function moveToDownload(){
 				praise:txtDianZanShu,
 				pageView:txtLiuLanShu,
 				id:txtZuoZheID,
-				has_tag_every:tempYesAllLable,
-				has_tag_some:tempYesAnyLable,
-				no_tag_any:tempNoAnyLable,
-				no_tag_every:tempNoAllLable,
+				'has_tag_every':tempYesAllLable,
+				'has_tag_some':tempYesAnyLable,
+				'no_tag_any':tempNoAnyLable,
+				'no_tag_every':tempNoAllLable,
 				single_picrure:txtSinglePicture,
 				muchle_picture:txtMuchlePicture,
 				much_cartoon:txtMuchCartoon,
@@ -413,7 +421,7 @@ function moveToDownload(){
 			},
 			success:function(data){
 				console.log(data);
-				location.href = 'http://localhost:3000/download';
+				window.open('http://localhost:3000/download');
 			},
 			error:function(err){
 				console.log('err');
