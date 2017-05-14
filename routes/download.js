@@ -7,14 +7,6 @@ var BOOK = GetModel('Work');
 
 var router = express.Router();
 
-var jsonToArr =function(json){
-  var arr =[];
-  for(o in json){
-    arr.push(json[o]);
-  }
-  return arr;
-}
-
 router.post('/',function(req,res){
     console.log(req.body);
     var praise =req.body.praise || '0';
@@ -40,7 +32,6 @@ router.post('/',function(req,res){
     }else {
       var no_tag_every =[];
     }
-    console.log('has_tag_some: '+JSON.stringify(has_tag_some));
 
     var Filter =require('./../spider/class/filter');
     var filterCondition ={
@@ -50,7 +41,7 @@ router.post('/',function(req,res){
       "no_tag_every":no_tag_every
     }
     var filter = new Filter(filterCondition);
-    console.log('filterCondition: '+JSON.stringify(filterCondition));
+    //console.log('filterCondition: '+JSON.stringify(filterCondition));
     var condition ={
       'praise': {$gte:praise},
       'pageView': {$gte:pageView}
@@ -66,13 +57,20 @@ router.post('/',function(req,res){
       if(err){
         console.log(err);
       }else {
-        console.log('resultSet: '+resultSet.length);
+        console.log('resultSet: '+resultSet);
         let items =filter.filter(resultSet);
-        console.log('items: '+items.length);
+        if(!items){
+            req.session.items =items;
+            req.session.save();
+            res.end('ok');
+        }else {
+            console.log('items: '+items.length);
 
-        req.session.items =items;
-        req.session.save();
-        res.end('ok');
+            req.session.items =items;
+            req.session.save();
+            res.end('ok');
+        }
+
       }
     })
 

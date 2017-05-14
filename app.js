@@ -7,6 +7,7 @@ var express = require('express'),
     config = require('./default');
 
 var mongoose = require('mongoose');
+//mongoose.Promise = global.Promise;
 mongoose.connect(config.mongodb);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -38,7 +39,7 @@ app.use(function(req,res){
 })
 
 app.use(function(req,res){
-    res.send('404');
+    res.end('404');
 })
 
 if (module.parent){

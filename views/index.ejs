@@ -10,10 +10,11 @@
 <link href="css/style.css" rel='stylesheet' type='text/css' />
 <link href="css/px.css" rel='stylesheet' type='text/css' />
 <script src="js/jquery-1.11.0.min.js"></script>
-<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<!--<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>-->
 <!---- start-smoth-scrolling---->
 <script type="text/javascript" src="js/move-top.js"></script>
 <script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript" src="js/preview.js"></script>
 <script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$(".scroll").click(function(event){
@@ -346,8 +347,8 @@ function moveToDownload(){
 
 						            <div class="pppf-buttons">
 						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
-						                <button class="btn btn-outline-info" name="buttonPreview" ">Preview</button>
-						                <button class="btn btn-outline-success" name="buttonDownload" ">Download</button>
+						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">Preview</button>
+						                <button class="btn btn-outline-success" name="buttonDownload" >Download</button>
 
 						            </div>
 												<br></br>
@@ -355,15 +356,15 @@ function moveToDownload(){
 													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
 														<table class="table">
 															<tr>
-																<td>总任务数：</td>
+																<td>总任务数：<p id="tasks"></p></td>
 																<td v-text="taskCount"></td>
 															</tr>
 															<tr>
-																<td>已完成：</td>
+																<td>已完成：<p id="completed"></p></td>
 																<td v-text="finishCount>=0?finishCount:'-'"></td>
 															</tr>
 															<tr>
-																<td>剩余时间：</td>
+																<td>剩余时间：<p id="time"></p></td>
 				 												<td v-text="forecastTime>=0?formatTime(forecastTime):'-'"></td>
 		 												</tr>
 													</table>
@@ -379,14 +380,6 @@ function moveToDownload(){
 	<!--end function -->
 	<script>
 	var terminalForm=document.terminal;
-	var arrToJson = function(a){
-	  var json = {};
-	  for(var i=0;i<a.length;i++)
-	  {
-	      json[i]=a[i];
-	  }
-	  return json;
-	}
 
 		function bottonClickDownload(){
 		   var txtDianZanShu=""+terminalForm.dianZhanShu.value;
@@ -430,15 +423,8 @@ function moveToDownload(){
 
 		}
 
-
-		function bottonClickPreview(){
-		var txtTotalAssignment;
-		var txtDoneAssignment;
-		var leftTime;
-		alert("hh");
-		}
 		terminalForm.buttonDownload.addEventListener("click",bottonClickDownload);
-		terminalForm.buttonPreview.addEventListener("click",bottonClickPreview);
+
 	</script>
 	<!--end-testimonial-->
 	<!--start-footer-->

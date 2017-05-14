@@ -41,9 +41,9 @@ HTMLParser.parsePixiver = function(ID,callback,cb2){
     HTMLParser.fetch(seed,function($){
         var children_list = $('.count-container').children();
         avator = $('.usericon').children('img:first-child').attr('src') || '';
-        bookmarket = children_list.eq(0).children('a:first-child').text().trim() || '0';
-        follow = children_list.eq(1).children('a:first-child').text().trim() || '0';
-        comment = children_list.eq(2).children('a:first-child').text().trim() || '0';
+        bookmarket = parseInt(children_list.eq(0).children('a:first-child').text().trim()) || 0;
+        follow = parseInt(children_list.eq(1).children('a:first-child').text().trim()) || 0;
+        comment = parseInt(children_list.eq(2).children('a:first-child').text().trim()) || 0;
         var p = new pixiver(ID,avator,bookmarket,follow,comment);
         callback(p);
     },cb2)
@@ -177,8 +177,8 @@ HTMLParser.initWork = function($,callback){
     var log = new Log();
     try {
         Util['pixiver'] = $('.user-link').first().attr('href').split('=')[1];
-        Util['pageView'] = $('.view-count').text() || '0';
-        Util['praise'] = $('.rated-count').text() || '0';
+        Util['pageView'] = parseInt($('.view-count').text()) || 0;
+        Util['praise'] = parseInt($('.rated-count').text()) || 0;
         var tag_length = $('.tags').children().length;
     } catch (e) {
         log.error(e);

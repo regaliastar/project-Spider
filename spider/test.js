@@ -204,20 +204,83 @@ db.once('open', function (callback) {
 var GetModel = require('./../lib/mongo');
 var BOOK = GetModel('Pixiver');
 var WorkModel = GetModel('Work');
+
+var condition ={
+    'praise': {$gte:1000},
+    'pageView': {$gte:1000}
+};
+
+
+/*
+var query =WorkModel.find(condition);
+//query.select('small_address');
+query.limit(50);
+query.sort({praise:-1});
+
+query.exec(function(err,resultSet){
+  if(err){
+    console.log(err);
+  }else {
+    //let items =filter.filter(resultSet);
+    console.log('items: '+resultSet);
+    console.log('length: '+resultSet.length);
+    console.log('关闭数据库');
+    db.close();
+  }
+});
+*/
 /*
 BOOK.find({'bookmarket':{$gte:1}},function(err,items){
     if(!err){
         var length =items.length;
         console.log('共有 '+length);
+        console.log(items[0]);
         items.map(function(item){
-            console.log(item);
+            //console.log(item);
+            length--;
+            if(!length){
+                console.log('BOOk共有 '+items.length);
+                db.close();
+            }
+        })
+    }else {
+        console.log(err);
+    }
+});*/
+
+
+BOOK.find({'follow':{$gte:'1'}},function(err,items){
+    if(!err){
+        console.log(items[0]);
+        var length =items.length;
+        console.log('BOOK共有 '+items.length);
+        items.map(function(item){
+            //console.log(item);
             length--;
             if(!length) db.close();
         })
     }else {
         console.log(err);
     }
-});*/
+});
+
+WorkModel.find({'pageView':{$gte:'1000'}},function(err,items){
+    if(!err){
+        var length =items.length;
+        console.log(items[0]);
+        items.map(function(item){
+            //console.log(item);
+            length--;
+            if(!length){
+                console.log('Work共有 '+items.length);
+                db.close();
+            }
+        })
+    }else {
+        console.log(err);
+    }
+});
+
 /*
 BOOK.find({id:''}).limit(10).sort({'follow':-1}).exec(function(err,res){
   if(err){
@@ -228,34 +291,20 @@ BOOK.find({id:''}).limit(10).sort({'follow':-1}).exec(function(err,res){
     db.close();
   }
 })*/
-var condition ={
-    'praise': {$gte:100},
-    'pageView': {$gte:100}
-}
-var output=['small_address'];
 
-var query =WorkModel.find(condition);
-query.select('small_address');
-query.limit(100);
-query.sort({pixiver:-1});
 
-query.exec(function(err,resultSet){
-  if(err){
-    console.log(err);
-  }else {
-    //let items =filter.filter(resultSet);
-    console.log('items: '+resultSet);
-    console.log('length: '+resultSet.length);
-    db.close();
-  }
-})
 /*
 var Operator =require('./../lib/operator');
 var opw = new Operator({'schema':'Work'});
 var opmw = new Operator({'schema':'MutilWork'});
-opw.remove({'pageView':{$gte:0}},function(){
-  console.log('w over');
+var opp = new Operator({'schema':'Pixiver'});
+console.log('t');
+opw.remove({},function(items){
+  console.log('p over :'+items.length);
 })
-opmw.remove({'pageView':{$gte:0}},function(){
-  console.log('w over');
+opw.remove({},function(items){
+  console.log('w over '+items.length);
+})
+opmw.remove({},function(items){
+  console.log('w over '+items.length);
 })*/

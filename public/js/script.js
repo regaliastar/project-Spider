@@ -24,14 +24,6 @@ $(document).ready(function(){
 
 	/* ---- Using Modernizr to check if the "required" and "placeholder" attributes are supported ---- */
 
-	if (!Modernizr.input.placeholder) {
-		$('.email').val('Input your e-mail address here...');
-		$('.email').focus(function() {
-			if($(this).val() == 'Input your e-mail address here...') {
-				$(this).val('');
-			}
-		});
-	}
 
 	// for detecting if the browser is Safari
 	var browser = navigator.userAgent.toLowerCase();
