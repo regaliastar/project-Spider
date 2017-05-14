@@ -96,12 +96,14 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
     var worksList =[];
     var _self =this;
     HTMLParser.pushPixiverWorks(ID,function(worksUrls){
+        var tasksLength =worksUrls.length;
+        _self.emit('once',tasksLength || 1);
+
         if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined'){
           console.log('send error in parsePixiverWorks');
            _self.emit('error');
            return;
         }
-        var tasksLength =worksUrls.length;
         //console.log('worksUrls.length: '+worksUrls.length);
         //console.log('worksUrls: '+worksUrls[0]);
         var originLength =tasksLength;

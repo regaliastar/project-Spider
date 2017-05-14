@@ -1,28 +1,76 @@
 var express = require('express'),
- path = require('path');
+    path = require('path'),
+    Filter = require('./../spider/class/Filter'),
+    HTMLParser = require('./../spider/class/HTMLParser');
 
 var router = express.Router();
 
 
 router.post('/',function(req,res){
-    var data ={
-        'tasks':''+1,
-        'completed':''+1,
-        'time':''+1
-    }
     if(req.body.post){
+        var data ={
+            'tasks':''+0,
+            'completed':''+0,
+            'time':''+0
+        }
+        req.session.preview ={};
+        req.session.save();
         console.log('req.body');
+        var htmlParser = new HTMLParser();
+        var pixiver = req.body.id;
+        var tasks =0,completed =0,time =0,error =0;
+        var items =[];
+
+        htmlParser.parsePixiverWorks(pixiver);
+        htmlParser.once('once',function(length){
+            tasks =length;
+            req.session.preview.tasks =tasks;
+            req.session.save();
+        });
+        htmlParser.on('message',function(msg){
+            console.log(msg);
+        });
+        htmlParser.on('success',function(work){
+            console.log('success');
+            completed++;
+            items.push(work);
+            req.session.preview.completed =completed;
+            req.session.save();
+        });
+        htmlParser.on('error',function(){
+            error++;
+            if((error+completed) === tasks){
+                req.session.preview.ok =true;
+            }
+            console.log('error: '+error+'tasks: '+tasks);
+            req.session.preview.error =error;
+            req.session.save();
+        });
+        htmlParser.on('close',function(){
+            console.log('close');
+            req.session.items =items;
+            req.session.preview.ok =true;
+            req.session.save();
+        });
+
         res.send('ok');
     }else {
         console.log('else');
 
-        res.send(data);
+        res.send(req.session.preview);
+
     }
-
-
-
-
-
 });
+
+router.get('/',function(req,res,next){
+    if(req.session.items){
+        res.render('download',{
+          items:req.session.items,
+          length:req.session.items.length
+        });
+    }else {
+        next();
+    }
+})
 
 module.exports = router;

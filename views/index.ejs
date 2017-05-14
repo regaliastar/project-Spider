@@ -343,16 +343,14 @@ function moveToDownload(){
 						                </select>
 						            </div>
 
-
-
 						            <div class="pppf-buttons">
 						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
 						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">Preview</button>
-						                <button class="btn btn-outline-success" name="buttonDownload" >Download</button>
+						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">Download</button>
 
 						            </div>
-												<br></br>
-												<div class="pi-item">
+												<p id="analysis" style="display: none;">正在解析...</p>
+												<div class="pi-item" >
 													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
 														<table class="table">
 															<tr>
@@ -364,9 +362,9 @@ function moveToDownload(){
 																<td v-text="finishCount>=0?finishCount:'-'"></td>
 															</tr>
 															<tr>
-																<td>剩余时间：<p id="time"></p></td>
-				 												<td v-text="forecastTime>=0?formatTime(forecastTime):'-'"></td>
-		 												</tr>
+																<td>失败数：<p id="error"></p></td>
+																<td v-text="finishCount>=0?finishCount:'-'"></td>
+															</tr>
 													</table>
 												</div>
 						        </div>
