@@ -28,11 +28,11 @@ $(document).ready(function(){
                 url:'/preview',
                 data:{},
                 success:function(data){
-                    $('#analysis').slideUp();
-                    $('#tasks').text(data['tasks']);
-                    $('#completed').text(data['completed']);
-                    $('#time').text(data['time']);
-                    $('#error').text(data['error']);
+                    if(data['tasks'])   $('#analysis').slideUp();
+
+                    $('#tasks').text('总任务数：'+(data['tasks'] || 0));
+                    $('#completed').text('已完成：'+(data['completed'] || 0));
+                    $('#error').text('失败数：'+(data['error'] || 0));
                     if(data['ok']){
                         clearInterval(roll);
                         $("#Preview").attr("disabled",false);
@@ -44,7 +44,7 @@ $(document).ready(function(){
                     console.log(err);
                 }
             })
-        },1500);
+        },800);
 
 
     });

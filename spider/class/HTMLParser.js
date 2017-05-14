@@ -288,8 +288,93 @@ HTMLParser.parseMutilWork = function(url,callback,cb2){
 /**
  *
  */
-HTMLParser.prototype.parseSearch = function(url,filter,callback){
+HTMLParser.pushSearchWorks = function(keywords,callback){
+    var seed = 'http://www.pixiv.net/search.php?s_mode=s_tag&word='+encodeURI(keywords);
+    var workUrls =[];
 
+    var parseOnePage = function(TAG,URL){
+        var header = require('./../requestHeader')(URL);
+        HTMLParser.fetch(header,function($){
+            var no_item = $('._no-item').text();
+            if(no_item === '未找到任何相关结果'){
+                console.log('未找到任何相关结果，可尝试使用日文原名搜索');
+                callback('');
+                return;
+            }else{
+                $('._image-items').children().each(function(i,elem){
+                    workUrls.push('http://www.pixiv.net'+$(this).children().first().attr('href'));
+                });
+            }
+
+            var NEXT = $('.next').first().children().attr('href');
+            if(NEXT){
+                NEXT = NEXT.getQueryString(keywords);
+                var nextUrl = URL.split('?')[0]+NEXT;
+                parseOnePage(TAG,nextUrl);
+
+            }else {
+                if(callback)    callback(workUrls);
+            }
+        })
+    }
+
+    parseOnePage(keywords,seed);
+}
+
+String.prototype.getQueryString = function(tag){
+	if(!this)	return;
+	return '?word='+encodeURI(tag)+this.substring(this.indexOf('&'));
+}
+
+HTMLParser.prototype.parseSearchWorks = function(keywords,filter){
+    var _self =this;
+    var async =require('async');
+
+    HTMLParser.pushSearchWorks(keywords,function(worksUrls){
+        var tasksLength =worksUrls.length || 0;
+        _self.emit('once',tasksLength || 1);
+
+        if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined' || (!tasksLength)){
+          console.log('send error in parsePixiverWorks');
+           _self.emit('error');
+           return;
+        }
+        //console.log('worksUrls.length: '+worksUrls.length);
+        //console.log('worksUrls: '+worksUrls[0]);
+        var originLength =tasksLength;
+        //console.log('origin length: '+tasksLength);
+        async.mapLimit(worksUrls,_self.config.async,function(url,cb){
+            HTMLParser.parseWork(url,function(w){
+                //console.log(w);
+                //worksList.push(w);
+                tasksLength--;
+                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                _self.emit('success',w);
+                if(tasksLength === 0)    _self.emit('close');
+            },function(){
+                tasksLength--;
+                if(tasksLength === 0)    _self.emit('close');
+            });
+            HTMLParser.parseMutilWork(url,function(mw){
+                //console.log(mw);
+                //worksList.push(mw);
+                tasksLength--;
+                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                _self.emit('success',mw);
+                if(tasksLength === 0)    _self.emit('close');
+            },function(){
+                tasksLength--;
+                if(tasksLength === 0)    _self.emit('close');
+            });
+
+            cb();
+        },function(err,callback){
+            if(err){
+                console.log(err);
+            }
+            console.log('parsePixiverWorks fin');
+        });
+    })
 }
 
 /**

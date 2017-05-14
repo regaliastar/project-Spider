@@ -354,15 +354,15 @@ function moveToDownload(){
 													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
 														<table class="table">
 															<tr>
-																<td>总任务数：<p id="tasks"></p></td>
+																<td id="tasks">总任务数：</td>
 																<td v-text="taskCount"></td>
 															</tr>
 															<tr>
-																<td>已完成：<p id="completed"></p></td>
+																<td id="completed">已完成：</td>
 																<td v-text="finishCount>=0?finishCount:'-'"></td>
 															</tr>
 															<tr>
-																<td>失败数：<p id="error"></p></td>
+																<td id="error">失败数：</td>
 																<td v-text="finishCount>=0?finishCount:'-'"></td>
 															</tr>
 													</table>

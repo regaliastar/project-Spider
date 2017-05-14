@@ -1,8 +1,23 @@
-var Filter = require('./class/Filter');
-var filter = new Filter({'praise':'30',"praise_pro":0,"pageView":0,"has_tag_every":[],"has_tag_some":['2'],"no_tag_any":['1'],"no_tag_every":['1','10']});
-var workList = [{'praise':'10',"praise_pro":0,"pageView":100,"tags":['1','10'],"url":'www',"pixiver":'118'},
-                {'praise':'10',"praise_pro":0,"pageView":100,"tags":['1','2'],"url":'www',"pixiver":'118'},
-                {'praise':'20',"praise_pro":0,"pageView":200,"tags":['2'],"url":'www',"pixiver":'118'},
-                {'praise':'30',"praise_pro":0,"pageView":300,"tags":['3'],"url":'www',"pixiver":'118'}];
-var resultSet = filter.filter(workList);
-console.log('resultSet: '+JSON.stringify(resultSet));
+var HTMLParser = require('./class/HTMLParser');
+var htmlParser = new HTMLParser();
+
+htmlParser.parseSearchWorks('bdglabglsgbidf');
+
+htmlParser.once('once',function(length){
+    tasks =length;
+    console.log('tasks: '+tasks);
+});
+htmlParser.on('message',function(msg){
+    console.log(msg);
+});
+htmlParser.on('success',function(work){
+    console.log('success');
+    console.log(work);
+});
+htmlParser.on('error',function(){
+    console.log('error');
+});
+htmlParser.on('close',function(){
+    console.log('close');
+
+});
