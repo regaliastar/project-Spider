@@ -1,17 +1,19 @@
 var express = require('express'),
     path = require('path'),
     Operator = require('./../lib/operator'),
-    GetModel = require('./../lib/mongo');
+    GetModel = require('./../lib/mongo'),
+    Filter =require('./../spider/class/filter');
 
 var BOOK = GetModel('Work');
 
 var router = express.Router();
 
 router.post('/',function(req,res){
+    console.log('POST /download');
     console.log(req.body);
-    var praise =req.body.praise || '0';
-    var pageView =req.body.pageView || '0';
-    var pixiver =req.body.id || 0;
+    var praise =''+req.body.praise || '0';
+    var pageView =''+req.body.pageView || '0';
+    var pixiver =''+req.body.id || 0;
     if(req.body.has_tag_every){
       var has_tag_every =req.body.has_tag_every.split(' ') || [];
     }else {
@@ -33,7 +35,6 @@ router.post('/',function(req,res){
       var no_tag_every =[];
     }
 
-    var Filter =require('./../spider/class/filter');
     var filterCondition ={
       "has_tag_every":has_tag_every,
       "has_tag_some":has_tag_some,
@@ -49,30 +50,39 @@ router.post('/',function(req,res){
     if(pixiver){
       condition =Object.assign(condition,{'pixiver':pixiver});
     }
+    console.log('condition: '+JSON.stringify(condition));
     var query =BOOK.find(condition);
     query.limit(100);
     query.sort({praise:-1});
     //query.select('small_address');
-    query.exec(function(err,resultSet){
+    /*query.exec(function(err,resultSet){
       if(err){
         console.log(err);
       }else {
         console.log('resultSet: '+resultSet);
-        let items =filter.filter(resultSet);
-        if(!items){
-            req.session.items =items;
+        //resultSet =filter.filter(resultSet);
+        if(!resultSet){
+            req.session.items =resultSet;
             req.session.save();
             res.end('ok');
         }else {
-            console.log('items: '+items.length);
+            console.log('resultSet: '+resultSet.length);
 
-            req.session.items =items;
+            req.session.items =resultSet;
             req.session.save();
-            res.end('ok');
+            res.send('ok');
+            res.end();
         }
 
       }
-    })
+  });*/
+  query.exec(function(err,resultSet){
+      resultSet =filter.filter(resultSet);
+      req.session.items =resultSet;
+      req.session.save();
+      res.end('ok');
+
+  });
 
 });
 

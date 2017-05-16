@@ -62,6 +62,9 @@ body { min-height: 1500px ; }
 	float:right;
 	width:49%;
 }
+.break{
+
+}
 </style>
 </head>
 
@@ -71,6 +74,7 @@ function moveToDownload(){
 	                    scrollTop: $(".testimonial").offset().top+60
 	      			}, 1000);
 }
+
 </script>
 
 <body>
@@ -275,31 +279,31 @@ function moveToDownload(){
 						        <div class="ppf-form">
 						            <div class="form-group">
 						                <label>点赞数 ≥</label>
-						                <input type="number" class="form-control" name="dianZhanShu" v-model.number="pxer.pfConfig.score" />
+						                <input id="praise" type="number" class="form-control" name="dianZhanShu" v-model.number="pxer.pfConfig.score" />
 						            </div>
 						            <div class="form-group">
 						                <label>浏览数 ≥</label>
-						                <input type="number" class="form-control" name="liuLanShu" v-model.number="pxer.pfConfig.view" />
+						                <input id="pageView" type="number" class="form-control" name="liuLanShu" v-model.number="pxer.pfConfig.view" />
 						            </div>
 						            <div class="form-group">
 						                <label>作者ID</label>
-						                <input type="number" class="form-control" name="zuoZheID" v-model.number="pxer.pfConfig.avg" />
+						                <input id="pixiver" type="number" class="form-control" name="zuoZheID" v-model.number="pxer.pfConfig.avg" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>不能</strong>含有以下<strong>任意一个</strong>标签</label>
-						                <input v-model="no_tag_any" type="text" name="noAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input id="no_tag_any" type="text" name="noAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>不能同时</strong>含有以下<strong>所有</strong>标签</label>
-						                <input v-model="no_tag_every" type="text" name="noAllLable" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input id="no_tag_every" type="text" name="noAllLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>必须</strong>含有以下<strong>任意一个</strong>标签</label>
-						                <input v-model="has_tag_some" type="text" name="yesAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input id="has_tag_some" type="text" name="yesAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						            <div class="form-group">
 						                <label>作品中<strong>必须同时</strong>含有以下<strong>所有</strong>标签</label>
-						                <input v-model="has_tag_every" type="text" name="yesAllLable" class="form-control" placeholder="可以有多个，空格分割" />
+						                <input id="has_tag_every" type="text" name="yesAllLable" class="form-control" placeholder="可以有多个，空格分割" />
 						            </div>
 						        </div>
 						    </div>
@@ -347,7 +351,7 @@ function moveToDownload(){
 						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
 						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">Preview</button>
 						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">Download</button>
-
+										<button class="btn btn-outline-success break" name="buttonDownload" id="Download">Break</button>
 						            </div>
 												<p id="analysis" style="display: none;">正在解析...</p>
 												<div class="pi-item" >
@@ -377,38 +381,27 @@ function moveToDownload(){
 	</div>
 	<!--end function -->
 	<script>
-	var terminalForm=document.terminal;
-
-		function bottonClickDownload(){
-		   var txtDianZanShu=""+terminalForm.dianZhanShu.value;
-		   var txtLiuLanShu=""+terminalForm.liuLanShu.value;
-		   var txtZuoZheID=''+terminalForm.zuoZheID.value;
-
-		   var tempNoAnyLable=terminalForm.noAnyLable.value;
-		   var tempNoAllLable=terminalForm.noAllLable.value;
-		   var tempYesAnyLable=terminalForm.yesAnyLable.value;
-		   var tempYesAllLable=terminalForm.yesAllLable.value;
-
-		   var txtSinglePicture=terminalForm.singlePicture.value;
-		   var txtMuchlePicture=terminalForm.muchPicture.value;
-		   var txtMuchCartoon=terminalForm.muchCartoon.value;
-		   var txtDynamicPicture=terminalForm.dynamicPicture.value;
-
-		   $.ajax({
+	$('#Download').on('click',function(){
+		var praise = $("#praise").val().trim() || 0;
+		var pageView = $('#pageView').val().trim() || 0;
+		var pixiver = $('#pixiver').val().trim();
+		var no_tag_any = $('#no_tag_any').val().trim();
+		var no_tag_every = $('#no_tag_every').val().trim();
+		var has_tag_some = $('#has_tag_some').val().trim();
+		var has_tag_every = $('#has_tag_every').val().trim();
+	
+		$.ajax({
 			type:'post',
 			url:'/download',
 			data:{
-				praise:txtDianZanShu,
-				pageView:txtLiuLanShu,
-				id:txtZuoZheID,
-				'has_tag_every':tempYesAllLable,
-				'has_tag_some':tempYesAnyLable,
-				'no_tag_any':tempNoAnyLable,
-				'no_tag_every':tempNoAllLable,
-				single_picrure:txtSinglePicture,
-				muchle_picture:txtMuchlePicture,
-				much_cartoon:txtMuchCartoon,
-				dynamic_picture:txtDynamicPicture
+				'id':pixiver,
+                'tag':has_tag_every,
+                'praise':praise,
+                'pageView':pageView,
+                'no_tag_any':no_tag_any,
+                'no_tag_every':no_tag_every,
+                'has_tag_some':has_tag_some,
+                'has_tag_every':has_tag_every
 			},
 			success:function(data){
 				console.log(data);
@@ -419,9 +412,7 @@ function moveToDownload(){
 			}
 		});
 
-		}
-
-		terminalForm.buttonDownload.addEventListener("click",bottonClickDownload);
+	})
 
 	</script>
 	<!--end-testimonial-->

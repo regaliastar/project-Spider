@@ -7,19 +7,54 @@ var router = express.Router();
 
 
 router.post('/',function(req,res){
+
+    var filterCondition ={};
+    filterCondition.praise =req.body.praise || 0;
+    filterCondition.pageView =req.body.preview || 0;
+    if(req.body.has_tag_every){
+      var has_tag_every =req.body.has_tag_every.split(' ') || [];
+    }else {
+      var has_tag_every =[];
+    }
+    if(req.body.has_tag_some){
+      var has_tag_some =req.body.has_tag_some.split(' ') || [];
+    }else {
+      var has_tag_some =[];
+    }
+    if(req.body.no_tag_any){
+      var no_tag_any =req.body.no_tag_any.split(' ') || [];
+    }else {
+      var no_tag_any =[];
+    }
+    if(req.body.no_tag_every){
+      var no_tag_every =req.body.no_tag_every.split(' ') || [];
+    }else {
+      var no_tag_every =[];
+    }
+    filterCondition.has_tag_every =has_tag_every;
+    filterCondition.has_tag_some =has_tag_some;
+    filterCondition.no_tag_every =no_tag_every;
+    filterCondition.no_tag_any =no_tag_any;
+    req.session.filterCondition =filterCondition;
+    req.session.save();
+
     if(req.body.post && req.body.id){
         var data ={
             'tasks':''+0,
             'completed':''+0,
             'time':''+0
         }
+
         req.session.preview ={};
         req.session.save();
-        console.log('req.body');
+        console.log('enter id');
+        console.log(req.body);
         var htmlParser = new HTMLParser();
         var pixiver = req.body.id;
         var tasks =0,completed =0,time =0,error =0;
         var items =[];
+
+        var filter = new Filter(req.session.filterCondition);
 
         htmlParser.parsePixiverWorks(pixiver);
         htmlParser.once('once',function(length){
@@ -48,6 +83,7 @@ router.post('/',function(req,res){
         });
         htmlParser.on('close',function(){
             console.log('close');
+            items =filter.filter(items);
             req.session.items =items;
             req.session.preview.ok =true;
             req.session.save();
@@ -62,9 +98,13 @@ router.post('/',function(req,res){
         }
         req.session.preview ={};
         req.session.save();
-        console.log('req.body');
+
+        console.log('enter tag');
+        console.log(req.body);
         var tasks =0,completed =0,time =0,error =0;
         var items =[];
+
+        var filter = new Filter(req.session.filterCondition);
 
         var htmlParser = new HTMLParser();
 
@@ -91,11 +131,15 @@ router.post('/',function(req,res){
         });
         htmlParser.on('close',function(){
             console.log('close');
+            items =filter.filter(items);
             req.session.items =items;
             req.session.preview.ok =true;
             req.session.save();
         });
 
+    }else if (!req.body.id && !req.body.tag && req.body.post) {
+        console.log(req.body);
+        res.send({'ok':true});
     }else {
         console.log('else');
 

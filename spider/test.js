@@ -247,24 +247,23 @@ BOOK.find({'bookmarket':{$gte:1}},function(err,items){
         console.log(err);
     }
 });*/
+var praise='1000';
+var pageView = '0';
+var condition ={
+  'praise': {$gte:praise},
+  'pageView': {$gte:pageView}
+}
 
-
-BOOK.find({'follow':{$gte:'1'}},function(err,items){
-    if(!err){
-        console.log(items[0]);
-        var length =items.length;
-        console.log('BOOK共有 '+items.length);
-        items.map(function(item){
-            //console.log(item);
-            length--;
-            if(!length) db.close();
-        })
-    }else {
-        console.log(err);
-    }
+var query =WorkModel.find(condition);
+query.limit(100);
+query.sort({praise:-1});
+query.exec(function(err,resultSet){
+    console.log('length: '+resultSet.length);
+    console.log(resultSet[0]);
+    db.close();
 });
-
-WorkModel.find({'pageView':{$gte:'1000'}},function(err,items){
+/*
+WorkModel.find({'pageView':{$gte:0}},function(err,items){
     if(!err){
         var length =items.length;
         console.log(items[0]);
@@ -279,7 +278,23 @@ WorkModel.find({'pageView':{$gte:'1000'}},function(err,items){
     }else {
         console.log(err);
     }
+});*/
+/*
+BOOK.find({'follow':{$gte:'50'}},function(err,items){
+    if(!err){
+        console.log(items[0]);
+        var length =items.length;
+        console.log('BOOK共有 '+items.length);
+        items.map(function(item){
+            //console.log(item);
+            length--;
+            if(!length) db.close();
+        })
+    }else {
+        console.log(err);
+    }
 });
+*/
 
 /*
 BOOK.find({id:''}).limit(10).sort({'follow':-1}).exec(function(err,res){

@@ -7,7 +7,7 @@ var express = require('express'),
     config = require('./default');
 
 var mongoose = require('mongoose');
-//mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise;
 mongoose.connect(config.mongodb);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -22,6 +22,8 @@ app.set('view engine','ejs');
 
 app.use(cookieParser(config.cookieSecret));
 app.use(expressSession({
+    resave: false,
+    saveUninitialized: true,
 	secret:config.sessionSecret,
 	cookie:{maxAge:config.sessionMaxAge}
 }));
