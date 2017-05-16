@@ -55,34 +55,14 @@ router.post('/',function(req,res){
     query.limit(100);
     query.sort({praise:-1});
     //query.select('small_address');
-    /*query.exec(function(err,resultSet){
-      if(err){
-        console.log(err);
-      }else {
-        console.log('resultSet: '+resultSet);
-        //resultSet =filter.filter(resultSet);
-        if(!resultSet){
-            req.session.items =resultSet;
-            req.session.save();
-            res.end('ok');
-        }else {
-            console.log('resultSet: '+resultSet.length);
 
-            req.session.items =resultSet;
-            req.session.save();
-            res.send('ok');
-            res.end();
-        }
-
-      }
-  });*/
-  query.exec(function(err,resultSet){
+    query.exec(function(err,resultSet){
       resultSet =filter.filter(resultSet);
       req.session.items =resultSet;
       req.session.save();
       res.end('ok');
 
-  });
+    });
 
 });
 

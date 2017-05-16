@@ -69,6 +69,7 @@ router.post('/',function(req,res){
             console.log('success');
             completed++;
             items.push(work);
+            req.session.items =items;
             req.session.preview.completed =completed;
             req.session.save();
         });
@@ -91,11 +92,7 @@ router.post('/',function(req,res){
 
         res.send('ok');
     }else if (req.body.post && req.body.tag) {
-        var data ={
-            'tasks':''+0,
-            'completed':''+0,
-            'time':''+0
-        }
+
         req.session.preview ={};
         req.session.save();
 
@@ -122,10 +119,16 @@ router.post('/',function(req,res){
             console.log('success');
             completed++;
             items.push(work);
+
+            req.session.items =items;
             req.session.preview.completed =completed;
             req.session.save();
         });
         htmlParser.on('error',function(){
+            error++;
+            if((error+completed) === tasks){
+                req.session.preview.ok =true;
+            }
             req.session.preview.error =error;
             req.session.save();
         });
@@ -142,9 +145,7 @@ router.post('/',function(req,res){
         res.send({'ok':true});
     }else {
         console.log('else');
-
         res.send(req.session.preview);
-
     }
 });
 
@@ -156,7 +157,33 @@ router.get('/',function(req,res,next){
         });
         res.render('download',{
           items:items,
-          length:req.session.items.length
+          length:items.length
+        });
+    }else {
+        next();
+    }
+});
+
+router.post('/break',function(req,res,next){
+    console.log('POST /preview/break');
+    res.send('ok');
+    /*req.session.destroy(function(err){
+        if(err) console.log(err);
+    });*/
+
+});
+
+router.get('/break',function(req,res,next){
+    if(req.session.items){
+        var filter = new Filter(req.session.filterCondition);
+        var items =req.session.items;
+        items =filter.filter(items);
+        items.sort(function(a,b){
+            return b.praise - a.praise;
+        });
+        res.render('download',{
+          items:items,
+          length:items.length
         });
     }else {
         next();

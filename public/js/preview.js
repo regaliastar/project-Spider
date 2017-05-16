@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $('.break').attr("disabled",true);
-
+    var roll;
     $('#Preview').on('click',function(){
         $("#Preview").attr("disabled",true);
         $("#Download").attr("disabled",true);
@@ -42,7 +42,7 @@ $(document).ready(function(){
             }
         })
 
-        var roll=setInterval(function(){
+        roll=setInterval(function(){
             $.ajax({
                 type:'post',
                 url:'/preview',
@@ -68,4 +68,21 @@ $(document).ready(function(){
 
 
     });
+
+    $('#Break').on('click',function(){
+        $.ajax({
+            type:'post',
+            url:'/preview/break',
+            data:{},
+            success:function(data){
+
+                $("#Preview").attr("disabled",false);
+                $("#Download").attr("disabled",false);
+                window.open('http://localhost:3000/preview/break');
+            },
+            error:function(err){
+                console.log(err);
+            }
+        })
+    })
 });

@@ -1,4 +1,4 @@
-var HTMLParser = require('./class/HTMLParser');
+/*var HTMLParser = require('./class/HTMLParser');
 var htmlParser = new HTMLParser();
 
 htmlParser.parseSearchWorks('bdglabglsgbidf');
@@ -21,3 +21,9 @@ htmlParser.on('close',function(){
     console.log('close');
 
 });
+*/
+
+var a =['1','2'];
+var b =['3'];
+Array.prototype.push.apply(a,b);
+console.log(a);
