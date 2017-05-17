@@ -39,12 +39,6 @@ router.post('/',function(req,res){
     req.session.save();
 
     if(req.body.post && req.body.id){
-        var data ={
-            'tasks':''+0,
-            'completed':''+0,
-            'time':''+0
-        }
-
         req.session.preview ={};
         req.session.save();
         console.log('enter id');
@@ -132,7 +126,7 @@ router.post('/',function(req,res){
             req.session.preview.error =error;
             req.session.save();
         });
-        htmlParser.on('close',function(){
+        htmlParser.once('close',function(){
             console.log('close');
             items =filter.filter(items);
             req.session.items =items;

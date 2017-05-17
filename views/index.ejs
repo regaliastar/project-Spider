@@ -114,54 +114,23 @@ function moveToDownload(){
 				<div class="about-bottom">
 					<div class="about-bottom-text">
 						<div class="col-md-4 about-bottom-grid">
-							<span class="one"> </span>
-							<h4>No.01 Pixiver</h4>
-							<label> </label>
-							<p>bookmarket:666</p>
-							<p>follow:233</p>
-							<p>comment:233</p>
-						</div>
-						<div class="col-md-4 about-bottom-grid">
 							<span class="two active"> </span>
 							<h4>前五画师</h4>
 							<label> </label>
-							<p style="color:red">查看更多</p>
+							<p></p>
+							<a href="/pixiver/more" style="color:red" target="_blank">查看更多</a>
 						</div>
-						<div class="col-md-4 about-bottom-grid">
-							<span class="tre"> </span>
-							<h4>No.02 Pixiver</h4>
-							<label> </label>
-							<p>bookmarket:666</p>
-							<p>follow:233</p>
-							<p>comment:233</p>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="about-bottom-text">
-						<div class="col-md-4 about-bottom-grid">
-							<span class="fvr"> </span>
-							<h4>No.03 Pixiver</h4>
-							<label> </label>
-							<p>bookmarket:666</p>
-							<p>follow:233</p>
-							<p>comment:233</p>
-						</div>
-						<div class="col-md-4 about-bottom-grid">
-							<span class="fve"> </span>
-							<h4>No.04 Pixiver</h4>
-							<label> </label>
-							<p>bookmarket:666</p>
-							<p>follow:233</p>
-							<p>comment:233</p>
-						</div>
-						<div class="col-md-4 about-bottom-grid">
-							<span class="six"> </span>
-							<h4>No.05 Pixiver</h4>
-							<label> </label>
-							<p>bookmarket:666</p>
-							<p>follow:233</p>
-							<p>comment:233</p>
-						</div>
+						<%pixiver.forEach(function(pixiver){ %>
+							<div class="col-md-4 about-bottom-grid">
+								<img target="_blank" onclick="window.open('<%= pixiver.url %>')" src="../images/<%= pixiver.avator %>" alt="" ></img>
+								<h4>No.0<%= pixiver.No%> ID <%= pixiver.id%></h4>
+								<label> </label>
+								<p>bookmarket:<%= pixiver.bookmarket%></p>
+								<p>follow:<%= pixiver.follow%></p>
+								<p>comment:<%= pixiver.comment%></p>
+							</div>
+						<%})%>
+
 						<div class="clearfix"></div>
 					</div>
 				</div>
@@ -177,15 +146,11 @@ function moveToDownload(){
 			</div>
 			<div class="gallery-bottom">
 				 <ul id="flexiselDemo3">
-						<li>
-							<img src="images/g-1.jpg" alt="" />
-						 </li>
+					 <%work.forEach(function(work){ %>
 						 <li>
-							<img src="images/g-2.jpg" alt="" />
+							 <img onclick="window.open('http://localhost:3000/images/<%= work.name %>')" src="images/<%= work.name%>" alt="">
 						 </li>
-						 <li>
-							<img src="images/g-3.jpg" alt="" />
-						 </li>
+					 <%})%>
 					 </ul>
 			</div>
 		</div>
@@ -223,49 +188,7 @@ function moveToDownload(){
 				    <script type="text/javascript" src="js/jquery.flexisel.js"></script>
 
 			<!--End-slider-script-->
-	<!--start-work-->
-	<div class="work">
-		<div class="container">
-			<div class="work-top">
-				<h3>更多资讯</h3>
-				<div class="work-bottom">
-					<div class="col-md-4 work-left">
-						<div class="work-one wrk">
-							<h4>01</h4>
-							<p>Information</p>
-						</div>
-						<div class="work-one">
-							<h4>02</h4>
-							<p>Information</p>
-						</div>
-						<div class="work-one">
-							<h4>03</h4>
-							<p>Information</p>
-						</div>
-					</div>
-					<div class="col-md-4 work-middle">
-						<img src="images/work-1.png" alt="" />
-					</div>
-					<div class="col-md-4 work-right">
-						<div class="work-one wrk">
-							<h4>04</h4>
-							<p>Information</p>
-						</div>
-						<div class="work-one">
-							<h4>05</h4>
-							<p>Information</p>
-						</div>
-						<div class="work-one">
-							<h4>06</h4>
-							<p>Information</p>
-						</div>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--end-work-->
+
 	<!--start-testimonial-->
 	<div class="testimonial">
 		<div class="container">
@@ -353,7 +276,7 @@ function moveToDownload(){
 						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">Download</button>
 										<button class="btn btn-outline-success break" name="buttonDownload" id="Break">Break</button>
 						            </div>
-												<p id="analysis" style="display: none;">正在解析...</p>
+												<p id="analysis" style="display: none;">正在解析</p>
 												<div class="pi-item" >
 													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
 														<table class="table">

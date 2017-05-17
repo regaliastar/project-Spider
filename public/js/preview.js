@@ -13,6 +13,12 @@ $(document).ready(function(){
         var has_tag_some = $('#has_tag_some').val().trim();
         var has_tag_every = $('#has_tag_every').val().trim();
 
+        var time =0;
+        var timer =setInterval(function(){
+            time++;
+            $('#analysis').text('正在解析 用时：'+time+' s');
+        },1000);
+
         $('#analysis').slideDown();
         $.ajax({
             type:'post',
@@ -48,13 +54,18 @@ $(document).ready(function(){
                 url:'/preview',
                 data:{},
                 success:function(data){
-                    if(data['tasks'])   $('#analysis').slideUp();
+                    /*if(data['tasks']){
+                        clearInterval(timer);
+                        $('#analysis').slideUp();
+                    }*/
 
                     $('#tasks').text('总任务数：'+(data['tasks'] || 0));
                     $('#completed').text('已完成：'+(data['completed'] || 0));
                     $('#error').text('失败数：'+(data['error'] || 0));
                     if(data['ok']){
                         clearInterval(roll);
+                        clearInterval(timer);
+                        $('#analysis').slideUp();
                         $("#Preview").attr("disabled",false);
                         $("#Download").attr("disabled",false);
                         window.open('http://localhost:3000/preview');

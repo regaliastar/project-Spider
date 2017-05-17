@@ -205,10 +205,10 @@ a.hvr-sweep-to-right:hover:before,a.hvr-sweep-to-right:focus:before,a.hvr-sweep-
 	width:70%;
 	height:1px;
 }
-.about-bottom-grid span{
-	background:url(../images/how.png) no-repeat;
-	width:136px;
-	height:156px;
+.about-bottom-grid img{
+	/*background:url(../images/how.png) no-repeat;*/
+	width:170px;
+	height:170px;
 	display:block;
 	margin:0 auto;
 	transition: 0.5s all ease;
@@ -217,6 +217,11 @@ a.hvr-sweep-to-right:hover:before,a.hvr-sweep-to-right:focus:before,a.hvr-sweep-
 	-o-transition: 0.5s all ease;
 	-ms-transition: 0.5s all ease;
 }
+.gallery-bottom img{
+    width:300px;
+    height:300px;
+}
+
 .about-bottom-grid span.one{
 	/*background-position:0px 0px;*/
     background-position:-272px 0px;

@@ -128,8 +128,8 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
                 _self.emit('success',mw);
                 if(tasksLength === 0)    _self.emit('close');
             },function(){
-                tasksLength--;
-                if(tasksLength === 0)    _self.emit('close');
+                //tasksLength--;
+                //if(tasksLength === 0)    _self.emit('close');
             });
 
             cb();
@@ -235,6 +235,7 @@ HTMLParser.parseWork = function(url,callback,cb2){
     },cb2)
 }
 
+
 /**
  * @param url format:http://www.pixiv.net/member_illust.php?mode=medium&illust_id=60909471
  *
@@ -310,7 +311,10 @@ HTMLParser.pushSearchWorks = function(keywords,callback){
             if(NEXT){
                 NEXT = NEXT.getQueryString(keywords);
                 var nextUrl = URL.split('?')[0]+NEXT;
-                parseOnePage(TAG,nextUrl);
+                //parseOnePage(TAG,nextUrl);
+                setTimeout(function(){
+                    parseOnePage(TAG,nextUrl);
+                },200);
 
             }else {
                 if(callback)    callback(workUrls);
@@ -335,46 +339,60 @@ HTMLParser.prototype.parseSearchWorks = function(keywords,filter){
         _self.emit('once',tasksLength || 1);
 
         if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined' || (!tasksLength)){
-          console.log('send error in parsePixiverWorks');
-           _self.emit('error');
-           return;
+            console.log('send error in parsePixiverWorks');
+            _self.emit('error');
+            return;
         }
         //console.log('worksUrls.length: '+worksUrls.length);
         //console.log('worksUrls: '+worksUrls[0]);
         var originLength =tasksLength;
         //console.log('origin length: '+tasksLength);
-        async.mapLimit(worksUrls,_self.config.async,function(url,cb){
-            HTMLParser.parseWork(url,function(w){
-                //console.log(w);
-                //worksList.push(w);
-                tasksLength--;
-                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
-                _self.emit('success',w);
-                if(tasksLength === 0)    _self.emit('close');
-            },function(){
-                tasksLength--;
-                if(tasksLength === 0)    _self.emit('close');
-            });
-            HTMLParser.parseMutilWork(url,function(mw){
-                //console.log(mw);
-                //worksList.push(mw);
-                tasksLength--;
-                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
-                _self.emit('success',mw);
-                if(tasksLength === 0)    _self.emit('close');
-            },function(){
-                tasksLength--;
-                if(tasksLength === 0)    _self.emit('close');
-            });
+        try {
+            async.mapLimit(worksUrls,_self.config.async,function(url,cb){
+                HTMLParser.parseWork(url,function(w){
+                    //console.log(w);
+                    //worksList.push(w);
+                    tasksLength--;
+                    _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                    _self.emit('success',w);
+                    if(tasksLength === 0)    _self.emit('close');
+                },function(){
+                    //throw new Error('error in fetch');
+                    tasksLength--;
+                    _self.emit('error');
+                    if(tasksLength === 0)    _self.emit('close');
+                });
+                HTMLParser.parseMutilWork(url,function(mw){
+                    //console.log(mw);
+                    //worksList.push(mw);
+                    tasksLength--;
+                    _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                    _self.emit('success',mw);
+                    if(tasksLength === 0)    _self.emit('close');
+                },function(){
+                    //throw new Error('error in fetch');
+                    //tasksLength--;
+                    //_self.emit('error');
+                    //if(tasksLength === 0)    _self.emit('close');
+                });
 
-            cb();
-        },function(err,callback){
-            if(err){
-                console.log(err);
-            }
-            console.log('parsePixiverWorks fin');
-        });
+                cb();
+            },function(err,callback){
+                if(err){
+                    console.log(err);
+                }
+                console.log('parsePixiverWorks fin');
+                _self.emit('error');
+            });
+        } catch (e) {
+            console.log('catch in parsePixiverWorks');
+            console.log(e);
+            tasksLength--;
+            _self.emit('error');
+            if(tasksLength === 0)    _self.emit('close');
+        }
     })
+
 }
 
 /**
@@ -388,11 +406,12 @@ HTMLParser.fetch = function(header,callback,cb2){
 	    cheerio = require('cheerio'),
 	    Log = require('./../../log');
     var log = new Log();
-
+    var _self =this;
 	request(header,function(err,res){
 		if(err){
             if(cb2){
-                cb2();
+                //cb2();
+                console.log('fetch reqest error');
                 console.log(err);
             }
 			//console.log(err);
@@ -405,7 +424,16 @@ HTMLParser.fetch = function(header,callback,cb2){
 	}).on('error',function(){
 		//监听error事件，当错误发生时代码可继续执行而不中断
         if(cb2){
-            cb2();
+            try {
+                cb2();
+            } catch (e) {
+                console.log(e);
+                console.log('catch in fetch');
+                this.emit('error');
+            } finally {
+
+            }
+
         }
 		log.error('error! request in fetch.js');
 	})

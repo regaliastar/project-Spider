@@ -87,7 +87,7 @@ Download.prototype['init'] = function(){
  * @see Log
  *
  */
-Download.prototype['start'] = function(){
+Download.prototype['exec'] = function(){
     var async = require('async'),
         request = require('request'),
         fs = require('fs');
@@ -109,47 +109,55 @@ Download.prototype['start'] = function(){
             _self.ready--;
             _self.error++;
             log.info('url非法: '+url);
+            console.log('url非法: '+url);
             //return;
         }
 
         /**
          * 开始请求下载
          */
-        var header = Download.createHeader(url);
-        var filename =url.substring(url.lastIndexOf('/')+1);
+         try {
+             var header = Download.createHeader(url);
+             var filename =url.substring(url.lastIndexOf('/')+1);
 
-        request(header)
-            .on('error',function(err){
-                    log.error(err,'1 error');
-                    /**
-                     * 发射错误事件
-                     */
-                    _self.emit('error',url);
-                    return;
-                })
-                .pipe(fs.createWriteStream(_self.config.path+'/'+filename))
-                    .on('error',function(err){
-                        log.error(err,'2 error');_self.error++;_self.ready--;
-                        /**
-                         * 发射错误事件
-                         */
-                        _self.emit('error',url+' 无法解析');
-                        if(_self.ready ===0){
-                            _self.emit('close',_self.completed,_self.ready,_self.error);
-                        }
-                        return;
-                    })
-                        .on('close', function(){
-                            _self.emit('message',filename+'下载完成');
-                            _self.completed++;
-                            _self.ready--;
-                            /**
-                             * 发射结束事件
-                             */
-                            if(_self.ready ===0){
-                                _self.emit('close',_self.completed,_self.ready,_self.error);
-                            }
-                        });
+             request(header)
+                 .on('error',function(err){
+                         log.error(err,'1 error');
+                         /**
+                          * 发射错误事件
+                          */
+                         _self.emit('error',url);
+                         return;
+                     })
+                     .pipe(fs.createWriteStream(_self.config.path+'/'+filename))
+                         .on('error',function(err){
+                             log.error(err,'2 error');_self.error++;_self.ready--;
+                             /**
+                              * 发射错误事件
+                              */
+                             _self.emit('error',url+' 无法解析');
+                             if(_self.ready ===0){
+                                 _self.emit('close',_self.completed,_self.ready,_self.error);
+                             }
+                             return;
+                         })
+                             .on('close', function(){
+                                 _self.emit('message',filename+'下载完成');
+                                 _self.completed++;
+                                 _self.ready--;
+                                 /**
+                                  * 发射结束事件
+                                  */
+                                 if(_self.ready ===0){
+                                     _self.emit('close',_self.completed,_self.ready,_self.error);
+                                 }
+                             });
+         } catch (e) {
+             console.log(e);
+         } finally {
+
+         }
+
 
         callback();
     },function(err,callback){

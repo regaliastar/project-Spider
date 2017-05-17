@@ -57,6 +57,7 @@ router.post('/',function(req,res){
     //query.select('small_address');
 
     query.exec(function(err,resultSet){
+      console.log('length: '+resultSet.length);
       resultSet =filter.filter(resultSet);
       req.session.items =resultSet;
       req.session.save();

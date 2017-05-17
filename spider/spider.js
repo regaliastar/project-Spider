@@ -13,12 +13,17 @@ var App = require('./class/App');
 
 var config = {
     'async': 2,                 //并发量
-    'tasksNumber': 25,         //任务数量
+    'tasksNumber': 1,         //任务数量
     'filter':{'bookmarket':0,'follow':0,'comment':0,'praise':0,'pageView':0}    //默认过滤
 }
 
 var app1 = new App(config);
 //5481866
-app1.createPixiverWorkTasks(5481866);
+//1184799
+//2482417
+//14465
+//457541
+//1623989
+app1.createPixiverWorkTasks(1623989);
 var app2 = new App(config);
-app2.createPixiverTasks(5481866);
+app2.createPixiverTasks(1623989);
