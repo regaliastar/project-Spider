@@ -101,7 +101,7 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
 
         if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined'){
           console.log('send error in parsePixiverWorks');
-           _self.emit('error');
+           _self.emit('error','');
            return;
         }
         //console.log('worksUrls.length: '+worksUrls.length);
@@ -118,6 +118,7 @@ HTMLParser.prototype.parsePixiverWorks = function(ID){
                 if(tasksLength === 0)    _self.emit('close');
             },function(){
                 tasksLength--;
+                _self.emit('error',url);
                 if(tasksLength === 0)    _self.emit('close');
             });
             HTMLParser.parseMutilWork(url,function(mw){
@@ -359,7 +360,7 @@ HTMLParser.prototype.parseSearchWorks = function(keywords,filter){
                 },function(){
                     //throw new Error('error in fetch');
                     tasksLength--;
-                    _self.emit('error');
+                    _self.emit('error',url);
                     if(tasksLength === 0)    _self.emit('close');
                 });
                 HTMLParser.parseMutilWork(url,function(mw){
@@ -382,7 +383,7 @@ HTMLParser.prototype.parseSearchWorks = function(keywords,filter){
                     console.log(err);
                 }
                 console.log('parsePixiverWorks fin');
-                _self.emit('error');
+                //_self.emit('error');
             });
         } catch (e) {
             console.log('catch in parsePixiverWorks');
@@ -393,6 +394,71 @@ HTMLParser.prototype.parseSearchWorks = function(keywords,filter){
         }
     })
 
+}
+
+/**
+ * 解析给定的作品数组，用于解析不成功的地址
+ */
+HTMLParser.prototype.parseGivenWorks = function(worksUrls){
+    var _self =this;
+    var async =require('async');
+    var tasksLength =worksUrls.length || 0;
+    
+    _self.emit('once',tasksLength || 1);
+
+    if((!worksUrls[0]) || worksUrls[0] == 'http://www.pixiv.netundefined' || (!tasksLength)){
+        console.log('send error in parsePixiverWorks');
+        _self.emit('error','');
+        return;
+    }
+    //console.log('worksUrls.length: '+worksUrls.length);
+    //console.log('worksUrls: '+worksUrls[0]);
+    var originLength =tasksLength;
+    //console.log('origin length: '+tasksLength);
+    try {
+        async.mapLimit(worksUrls,_self.config.async,function(url,cb){
+            HTMLParser.parseWork(url,function(w){
+                //console.log(w);
+                //worksList.push(w);
+                tasksLength--;
+                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                _self.emit('success',w);
+                if(tasksLength === 0)    _self.emit('close');
+            },function(){
+                //throw new Error('error in fetch');
+                tasksLength--;
+                _self.emit('error',url);
+                if(tasksLength === 0)    _self.emit('close');
+            });
+            HTMLParser.parseMutilWork(url,function(mw){
+                //console.log(mw);
+                //worksList.push(mw);
+                tasksLength--;
+                _self.emit('message',url+'解析完毕 '+'还剩'+tasksLength+' 总共'+originLength);
+                _self.emit('success',mw);
+                if(tasksLength === 0)    _self.emit('close');
+            },function(){
+                //throw new Error('error in fetch');
+                //tasksLength--;
+                //_self.emit('error');
+                //if(tasksLength === 0)    _self.emit('close');
+            });
+
+            cb();
+        },function(err,callback){
+            if(err){
+                console.log(err);
+            }
+            console.log('parsePixiverWorks fin');
+            //_self.emit('error');
+        });
+    } catch (e) {
+        console.log('catch in parsePixiverWorks');
+        console.log(e);
+        tasksLength--;
+        _self.emit('error');
+        if(tasksLength === 0)    _self.emit('close');
+    }
 }
 
 /**

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>more-pixiver</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="more-pixiver" />
+
+<link href="../css/bootstrap.css" rel='stylesheet' type='text/css' />
+<link href="../css/style.css" rel='stylesheet' type='text/css' />
+<link href="../css/px.css" rel='stylesheet' type='text/css' />
+<script src="../js/jquery-1.11.0.min.js"></script>
+
+<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event){
+					event.preventDefault();
+					$('html,body').animate({scrollTop:$('.about').offset().top},1000);
+				});
+			});
+		</script>
+<!--start-smoth-scrolling-->
+<!--start-count-->
+<link rel="stylesheet" href="../css/jquery.countdown.css" />
+<script src="../js/jquery.countdown.js"></script>
+<script src="../js/script.js"></script>
+<script src="../js/index.js"></script>
+<!--end-count-->
+<style>
+body { min-height: 1500px ; }
+.pxer-app .pxer-class-fieldset {
+  border: 1px solid #ccc;
+  position: relative !important;
+  padding-top: 1em;
+  margin-top: 1em; }
+.pxer-app .pxer-class-fieldset .pcf-title {
+  background-color: #fff;
+  display: inline-block !important;
+  position: absolute;
+  top: -0.75em;
+  left: 0.45em;
+  font-size: 16px; }
+  .pxer-app .pxer-print .pp-filter {
+	width: 45% !important; }
+	.pxer-app .pxer-print .pp-filter, .pxer-app .pxer-print .pp-print {
+  margin-top: 1.5em;
+  padding: 12px; }
+.pxer-app .pxer-print .pp-print {
+  width: 35%; }
+  .pxer-app .pxer-print .pp-print .pppf-buttons {
+	text-align: right; }
+
+.left{
+	float:left;
+	width:49%;
+}
+.right{
+	float:right;
+	width:49%;
+}
+.break{
+
+}
+</style>
+</head>
+
+<body>
+<!--start-banner-->
+
+	<!--end-banner-->
+	<!--start-about-->
+	<div class="about">
+		<div class="container">
+			<div class="about-top">
+				<h3>今日推荐</h3>
+				<div class="about-bottom">
+					<div class="about-bottom-text">
+						<div class="col-md-4 about-bottom-grid">
+							<span class="two active"> </span>
+							<h4>前<%= number%>画师</h4>
+							<label> </label>
+							<p></p>
+						</div>
+						<%pixiver.forEach(function(pixiver){ %>
+							<div class="col-md-4 about-bottom-grid">
+								<img target="_blank" onclick="window.open('<%= pixiver.url %>')" src="../images/avator/<%= pixiver.avator %>" alt="" ></img>
+								<h4>No.<%= pixiver.No%> ID <%= pixiver.id%></h4>
+								<label> </label>
+								<p>bookmarket:<%= pixiver.bookmarket%></p>
+								<p>follow:<%= pixiver.follow%></p>
+								<p>comment:<%= pixiver.comment%></p>
+							</div>
+						<%})%>
+
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--end-about-->
+	<!--start-gallery-->
+
+	<!--end-gallery-->
+	<!--Slider-Starts-Here-->
+				 <script type="text/javascript">
+					$(window).load(function() {
+
+						$("#flexiselDemo3").flexisel({
+							visibleItems: 3,
+							animationSpeed: 1000,
+							autoPlay: true,
+							autoPlaySpeed: 3000,
+							pauseOnHover: true,
+							enableResponsiveBreakpoints: true,
+							responsiveBreakpoints: {
+								portrait: {
+									changePoint:480,
+									visibleItems: 1
+								},
+								landscape: {
+									changePoint:640,
+									visibleItems: 2
+								},
+								tablet: {
+									changePoint:768,
+									visibleItems: 3
+								}
+							}
+						});
+
+					});
+				    </script>
+				    <script type="text/javascript" src="js/jquery.flexisel.js"></script>
+
+			<!--End-slider-script-->
+
+	<!--start-testimonial-->
+
+	<!--end function -->
+
+	<!--end-testimonial-->
+	<!--start-footer-->
+	<div class="footer">
+		<div class="container">
+			<div class="footer-main">
+				<div class="col-md-6 footer-left">
+					<a href="javascript:void(0);"><h3>Blinds</h3></a>
+					<p>Address:<span>SiChuan University</span>
+					   <span>No.12 team</span></p>
+				</div>
+				<div class="col-md-6 footer-right">
+					<p>How to contact us?</p>
+					<div class="ftr">
+						<label style="color:white"><a href="https://github.com/regaliastar/project-Spider" target="_blank">@github.com</a></label>
+						<ul>
+							<li><a href="javascript:void(0);"><span class="sky"> </span></a></li>
+							<li><a href="javascript:void(0);"><span class="twit"> </span></a></li>
+							<li><a href="javascript:void(0);"><span class="fb"> </span></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="footer-bottom">
+				<p>Copyright &copy; 2017 <a href="https://github.com/regaliastar/project-Spider" target="_blank" >project-Spider team</a></p>
+			</div>
+		</div>
+
+		<a href="#" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+	</div>
+	<!--end-footer-->
+</body>
+</html>

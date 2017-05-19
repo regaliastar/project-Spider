@@ -8,12 +8,11 @@ var router = express.Router();
 var op_Pixiver = new Operator({schema:'Pixiver'});
 var op_Work = new Operator({schema:'Work'});
 
-router.get('/',function(req,res){
-    /**
-     * 当图片本地不存在时，后台下载图片
-     */
-    op_Pixiver.getFivePixiver(function(resultSet){
-        var No =0;
+router.get('/more',function(req,res){
+    console.log('pixiver/more');
+    var No =0;
+    var number =30;
+    op_Pixiver.getPixiver(number,function(resultSet){
         for(o in resultSet){
             var avator =resultSet[o].avator;
             No++;
@@ -34,35 +33,13 @@ router.get('/',function(req,res){
                     }
                 });
             })(avator,resultSet[o].avator)
-
         }
-        //console.log(resultSet);
-        op_Work.getFiveWork(function(workSet){
-            for(o in workSet){
-                workSet[o].name =workSet[o].small_address.substring(workSet[o].small_address.lastIndexOf('/')+1);
-                (function(name,small_address){
-                    fs.exists('./public/images/worklist/'+name,function(exists){
-                        if(!exists){
-                            console.log(workSet[o].name+' bu cun zai');
-                            var download = new Download({path:'./public/images/worklist'});
-                            download.load(small_address);
-                            download.exec();
-                            download.on('close',function(){
-                                console.log(name+'下载完成');
-                            })
-                        }
-                    });
-                })(workSet[o].name,workSet[o].small_address)
+        res.render('more-pixiver',{
+            pixiver:resultSet,
+            number:number
+        });
+    });
 
-            }
-            res.render('index',{
-                pixiver:resultSet,
-                work:workSet
-            });
-        })
-
-    })
-
-});
+})
 
 module.exports = router;

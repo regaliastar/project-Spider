@@ -38,7 +38,7 @@ router.post('/',function(req,res){
     req.session.filterCondition =filterCondition;
     req.session.save();
 
-    if(req.body.post && req.body.id){
+    if(req.body.post && req.body.id){//搜画师
         req.session.preview ={};
         req.session.save();
         console.log('enter id');
@@ -47,6 +47,7 @@ router.post('/',function(req,res){
         var pixiver = req.body.id;
         var tasks =0,completed =0,time =0,error =0;
         var items =[];
+        var errList =[];
 
         var filter = new Filter(req.session.filterCondition);
 
@@ -67,13 +68,15 @@ router.post('/',function(req,res){
             req.session.preview.completed =completed;
             req.session.save();
         });
-        htmlParser.on('error',function(){
+        htmlParser.on('error',function(errUrl){
             error++;
             if((error+completed) === tasks){
                 req.session.preview.ok =true;
             }
             console.log('error: '+error+'tasks: '+tasks);
-            req.session.preview.error =error;
+            if(errUrl) errList.push(errUrl);
+            req.session.errList =errList;
+            req.session.error =error;
             req.session.save();
         });
         htmlParser.on('close',function(){
@@ -85,7 +88,7 @@ router.post('/',function(req,res){
         });
 
         res.send('ok');
-    }else if (req.body.post && req.body.tag) {
+    }else if (req.body.post && req.body.tag) {//搜TAG
 
         req.session.preview ={};
         req.session.save();
@@ -94,6 +97,7 @@ router.post('/',function(req,res){
         console.log(req.body);
         var tasks =0,completed =0,time =0,error =0;
         var items =[];
+        var errList =[];
 
         var filter = new Filter(req.session.filterCondition);
 
@@ -110,7 +114,7 @@ router.post('/',function(req,res){
             console.log(msg);
         });
         htmlParser.on('success',function(work){
-            console.log('success');
+            //console.log('success');
             completed++;
             items.push(work);
 
@@ -118,12 +122,14 @@ router.post('/',function(req,res){
             req.session.preview.completed =completed;
             req.session.save();
         });
-        htmlParser.on('error',function(){
+        htmlParser.on('error',function(errUrl){
             error++;
             if((error+completed) === tasks){
                 req.session.preview.ok =true;
             }
             req.session.preview.error =error;
+            if(errUrl) errList.push(errUrl);
+            req.session.errList =errList;
             req.session.save();
         });
         htmlParser.once('close',function(){
@@ -132,12 +138,14 @@ router.post('/',function(req,res){
             req.session.items =items;
             req.session.preview.ok =true;
             req.session.save();
+
         });
 
-    }else if (!req.body.id && !req.body.tag && req.body.post) {
+        res.send('ok');
+    }else if (!req.body.id && !req.body.tag && req.body.post) {//表单未填写
         console.log(req.body);
         res.send({'ok':true});
-    }else {
+    }else {//发送近况
         console.log('else');
         res.send(req.session.preview);
     }
@@ -153,6 +161,7 @@ router.get('/',function(req,res,next){
           items:items,
           length:items.length
         });
+        res.end();
     }else {
         next();
     }
@@ -169,6 +178,7 @@ router.post('/break',function(req,res,next){
 
 router.get('/break',function(req,res,next){
     if(req.session.items){
+        //console.log('errList: '+req.session.errList);
         var filter = new Filter(req.session.filterCondition);
         var items =req.session.items;
         items =filter.filter(items);
@@ -179,9 +189,82 @@ router.get('/break',function(req,res,next){
           items:items,
           length:items.length
         });
+
+        res.end();
     }else {
         next();
     }
 })
+
+router.post('/again',function(req,res){
+
+    if(req.body.post){
+        try {
+            console.log('POST /preview/again');
+            //console.log('errList: '+req.session.errList);
+
+            if(req.session.errList){
+                console.log(1);
+                var tasks =0,completed =0,time =0,error =0;
+                var items =req.session.items;
+                var errList =[];
+                req.session.again ={};
+                req.session.save();
+
+                var htmlParser = new HTMLParser();
+
+                htmlParser.parseGivenWorks(req.session.errList);
+
+                htmlParser.on('once',function(length){
+                    tasks =length;
+                    req.session.again.tasks =tasks;
+                    req.session.save();
+                });
+                htmlParser.on('message',function(msg){
+                    console.log(msg);
+                });
+                htmlParser.on('success',function(work){
+                    //console.log('success');
+                    completed++;
+                    items.push(work);
+
+                    req.session.items =items;
+                    req.session.again.completed =completed;
+                    req.session.save();
+                });
+                htmlParser.on('error',function(errUrl){
+                    error++;
+                    if((error+completed) === tasks){
+                        req.session.again.ok =true;
+                    }
+                    req.session.preview.error =error;
+                    errList.push(errUrl);
+                    req.session.again.errList =errList;
+                    req.session.save();
+                });
+                htmlParser.once('close',function(){
+                    console.log('close');
+                    var filter = new Filter(req.session.filterCondition);
+                    items =filter.filter(items);
+                    req.session.items =items;
+                    req.session.again.ok =true;
+                    req.session.save();
+                });
+            }
+
+            res.send('ok');
+        } catch (e) {
+            console.log(e);
+        } finally {
+
+        }
+
+    }else {
+        console.log('else');
+        res.send(req.session.again);
+    }
+
+
+});
 
 module.exports = router;

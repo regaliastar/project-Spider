@@ -57,6 +57,9 @@ project-Spider
 4. 爬取
 	1. 发送请求：`POST /preview`
 	2. 预览：`GET /preview`
+	3. 中断：`POST /preview/break`
+	4. 中断页面：`GET /preview/break`
+	5. 重试：`POST /preview/again`
 
 > 路由设计采用`REST`风格
 

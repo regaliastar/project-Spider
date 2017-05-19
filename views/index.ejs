@@ -19,7 +19,7 @@
 			jQuery(document).ready(function($) {
 				$(".scroll").click(function(event){
 					event.preventDefault();
-					$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+					$('html,body').animate({scrollTop:$(this.hash).offset().top},600);
 				});
 			});
 		</script>
@@ -72,7 +72,7 @@ body { min-height: 1500px ; }
 function moveToDownload(){
 	$('html, body').animate({
 	                    scrollTop: $(".testimonial").offset().top+60
-	      			}, 1000);
+	      			}, 500);
 }
 
 </script>
@@ -84,7 +84,7 @@ function moveToDownload(){
 				<div class="container">
 					<div class="head">
 						<div class="header-left">
-							<a href="index.html"><h1>PixivHelper</h1></a>
+							<a href="#"><h1>PixivHelper</h1></a>
 						</div>
 						<div class="header-right">
 							<p>contact us</p>
@@ -122,7 +122,7 @@ function moveToDownload(){
 						</div>
 						<%pixiver.forEach(function(pixiver){ %>
 							<div class="col-md-4 about-bottom-grid">
-								<img target="_blank" onclick="window.open('<%= pixiver.url %>')" src="../images/<%= pixiver.avator %>" alt="" ></img>
+								<img target="_blank" onclick="window.open('<%= pixiver.url %>')" src="../images/avator/<%= pixiver.avator %>" alt="" ></img>
 								<h4>No.0<%= pixiver.No%> ID <%= pixiver.id%></h4>
 								<label> </label>
 								<p>bookmarket:<%= pixiver.bookmarket%></p>
@@ -148,7 +148,7 @@ function moveToDownload(){
 				 <ul id="flexiselDemo3">
 					 <%work.forEach(function(work){ %>
 						 <li>
-							 <img onclick="window.open('http://localhost:3000/images/<%= work.name %>')" src="images/<%= work.name%>" alt="">
+							 <img onclick="window.open('http://localhost:3000/images/worklist/<%= work.name %>')" src="images/worklist/<%= work.name%>" alt="">
 						 </li>
 					 <%})%>
 					 </ul>
@@ -273,7 +273,9 @@ function moveToDownload(){
 						            <div class="pppf-buttons">
 						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
 						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">Preview</button>
+										<button class="btn btn-outline-success" name="buttonAgain" id="Again" style="display:none">重试</button>
 						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">Download</button>
+
 										<button class="btn btn-outline-success break" name="buttonDownload" id="Break">Break</button>
 						            </div>
 												<p id="analysis" style="display: none;">正在解析</p>
@@ -282,15 +284,15 @@ function moveToDownload(){
 														<table class="table">
 															<tr>
 																<td id="tasks">总任务数：</td>
-																<td v-text="taskCount"></td>
+																<td ></td>
 															</tr>
 															<tr>
 																<td id="completed">已完成：</td>
-																<td v-text="finishCount>=0?finishCount:'-'"></td>
+																<td ></td>
 															</tr>
 															<tr>
 																<td id="error">失败数：</td>
-																<td v-text="finishCount>=0?finishCount:'-'"></td>
+																<td ></td>
 															</tr>
 													</table>
 												</div>

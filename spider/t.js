@@ -22,7 +22,7 @@ htmlParser.on('close',function(){
 
 });
 */
-
+/*
 var config = require('./../default.js');
 var mongoose = require('mongoose');
 mongoose.connect(config.mongodb);
@@ -36,7 +36,7 @@ var Operator = require('./../lib/operator');
 var Download = require('./class/Download');
 var download = new Download({path:'./../public/images'});
 var operator = new Operator({schema:'Pixiver'});
-var op_Work = new Operator({schema:'Work'});
+var op_Work = new Operator({schema:'Work'});*/
 //download.load('https://i.pximg.net/img-original/img/2017/04/17/16/46/51/62450211_p0.jpg');
 /*operator.getFivePixiver(function(resultSet){
     var avatorSet =[];
@@ -57,6 +57,7 @@ var op_Work = new Operator({schema:'Work'});
         console.log('完成：'+completed+' 等待：'+ready+' 错误：'+err);
     })
 })*/
+/*
 var fs = require('fs');
 
 op_Work.getFiveWork(function(workSet){
@@ -77,7 +78,7 @@ op_Work.getFiveWork(function(workSet){
             console.log(n);
         })(workSet[o].small_address);
     }
-    /*download.load(workSet);
+    download.load(workSet);
     download.exec();
     download.on('message',function(msg){
         console.log(msg);
@@ -88,9 +89,9 @@ op_Work.getFiveWork(function(workSet){
     download.on('close',function(completed,ready,err){
         db.close();
         console.log('完成：'+completed+' 等待：'+ready+' 错误：'+err);
-    })*/
+    })
 
-})
+})*/
 /*
 download.load('https://i.pximg.net/img-original/img/2017/03/09/16/30/02/61821512_p0.png');
 download.load('bsfjksf');
@@ -104,3 +105,10 @@ download.on('error',function(err){
 download.on('close',function(completed,ready,err){
     console.log('完成：'+completed+' 等待：'+ready+' 错误：'+err);
 })*/
+
+var t ='';
+if(t){
+    console.log(1);
+}else {
+    console.log(2);
+}
