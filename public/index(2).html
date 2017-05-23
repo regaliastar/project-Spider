@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HOME</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+<link href="css/style.css" rel='stylesheet' type='text/css' />
+<link href="css/px.css" rel='stylesheet' type='text/css' />
+<link rel="stylesheet" href="css/search.css">
+<script src="js/jquery-1.11.0.min.js"></script>
+<!--<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>-->
+<!---- start-smoth-scrolling---->
+<script type="text/javascript" src="js/move-top.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript" src="js/preview.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$(".scroll").click(function(event){
+		event.preventDefault();
+		$('html,body').animate({scrollTop:$(this.hash).offset().top},600);
+	});
+});
+</script>
+<!--start-smoth-scrolling-->
+<!--start-count-->
+<link rel="stylesheet" href="css/jquery.countdown.css" />
+<script src="js/jquery.countdown.js"></script>
+<script src="js/script.js"></script>
+<script src="js/index.js"></script>
+<!--end-count-->
+<style>
+body { min-height: 1500px ; }
+.pxer-app .pxer-class-fieldset {
+  border: 1px solid #ccc;
+  position: relative !important;
+  padding-top: 1em;
+  margin-top: 1em; }
+.pxer-app .pxer-class-fieldset .pcf-title {
+  background-color: #fff;
+  display: inline-block !important;
+  position: absolute;
+  top: -0.75em;
+  left: 0.45em;
+  font-size: 16px; }
+  .pxer-app .pxer-print .pp-filter {
+	width: 45% !important; }
+	.pxer-app .pxer-print .pp-filter, .pxer-app .pxer-print .pp-print {
+  margin-top: 1.5em;
+  padding: 12px; }
+.pxer-app .pxer-print .pp-print {
+  width: 35%; }
+  .pxer-app .pxer-print .pp-print .pppf-buttons {
+	text-align: right; }
+
+.left{
+	float:left;
+	width:49%;
+}
+.right{
+	float:right;
+	width:49%;
+}
+.break{
+
+}
+.c-nav-search {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: middle;
+    z-index: 2;
+}
+.c-nav .nav-search-btn, .nav-search-btn-close {
+    background-color: transparent;
+    border-radius: 2px;
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 0;
+    height: 24px;
+    padding: 4px 0 0;
+    text-align: center;
+    vertical-align: middle;
+    width: 24px;
+}
+.c-nav .nav-search-icon {
+    background-image: url("images/glass.png");
+    background-position: 0.56% 99.38%;
+    background-repeat: no-repeat;
+    background-size: 1225% 1106.25%;
+    cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+.c-nav .nav-search-btn:hover .nav-search-icon {
+    background-image: url("images/glass.png");
+    background-position: 10.56% 99.38%;
+    background-repeat: no-repeat;
+    background-size: 1225% 1106.25%;
+}
+.c-nav .nav-search-btn-close .nav-search-icon {
+    background-image: url("images/glass.png");
+    background-position: 82.22% 45.96%;
+    background-repeat: no-repeat;
+    background-size: 1225% 1106.25%;
+    display: inline-block;
+    height: 16px;
+    /*overflow: hidden;*/
+    width: 16px;
+}
+.c-nav .nav-search-btn-close:hover .nav-search-icon {
+    background-image: url("images/glass.png");
+    background-position: 20.56% 99.38%;
+    background-repeat: no-repeat;
+    background-size: 1225% 1106.25%;
+}
+</style>
+</head>
+
+<script type="text/javascript">
+function moveToDownload(){
+	$('html, body').animate({
+	                    scrollTop: $(".testimonial").offset().top+60
+	      			}, 500);
+}
+
+</script>
+
+<body>
+<!--start-banner-->
+	<div class="banner" id="home">
+			/<div class="header"   style="position:fixed; top:0%; left:0%; width:100%;">
+				<div class="container">
+					<div class="head" >
+					<div class="header-right">
+						<span>
+							<p>contact us</p>
+							<p><a href="https://github.com/regaliastar/project-Spider" target="_blank">@github.com</a></p>
+							</span>
+						</div>
+						<div class="header-left">
+							<a href="#"><h1>PixivHelper</h1></a>
+						</div>
+						<div class="header-right">
+
+						<div class="c-nav-search">
+						<a href="javascript:void;" aria-label="搜索" class="nav-search-btn" id="headerOpenSearchBtn">
+						<img src="images/glass.png" class="nav-search-icon"></img>
+						</a>
+						</div>
+
+						</div>
+						<div class="" id="searchBlank" style="display:none">
+							<div class="c-searchbar J-search-bar" style="display: block;">
+								<div class="c-searchbar-inner">
+									<div class="c-searchbar-box">
+										<input id="topbarSearchInput" class="search-ipt" placeholder="请输入您想了解的问题，关键词或者云产品名称" type="text">
+										<button id="topbarSearchBtn" class="search-btn" hotrep="hp.header.topbarSearchBtn">搜索</button>
+										<div class="nav-dropdown-mini" style="display:block ">
+											<div class="dropdown-mini-inner dropdown-mini-lang">
+												<div class="dropdown-mini-list">
+													<ul id="searchTips" class="J_mobileSearchList" style="display: none;"></ul>
+													<ul class="J-mobileSearchHotList" style="display: none;"></ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			<div class="banner-top">
+				<div class="banner-bottom">
+					<!--<h2>Suspendisse rutrum commodo diam</h2>-->
+					<h2>PixivHelper - your best tools</h2>
+				</div>
+				<div class="b-btn">
+					<a href="javascript:void(0);" onclick="moveToDownload()" class="hvr-sweep-to-right">Dwonload now</a>
+				</div>
+			</div>
+	</div>
+	<script>
+
+	var varSearchForm=document.searchForm;
+	function bottonClickSearch(){
+	var tempYesAllLable=varSearchForm.searchIn.value.split(' ');
+	$.ajax({
+			type:'post',
+			url:'/search',
+			data:{
+				has_tag_every:tempYesAllLable
+				},
+				success:function(data){
+				console.log(data);
+				},
+				error:function(err){
+				console.log("err");
+				}
+			})
+	}
+
+	varSearchForm.buttonSearch.addEventListener("click",bottonClickSearch);
+
+	</script>
+	<!--end-banner-->
+	<!--start-about-->
+	<div class="about">
+		<div class="container">
+			<div class="about-top">
+				<h3>今日推荐</h3>
+				<div class="about-bottom">
+					<div class="about-bottom-text">
+						<div class="col-md-4 about-bottom-grid">
+							<span class="two active"> </span>
+							<h4>前五画师</h4>
+							<label> </label>
+							<p></p>
+							<a href="/pixiver/more" style="color:red" target="_blank">查看更多</a>
+						</div>
+						<%pixiver.forEach(function(pixiver){ %>
+							<div class="col-md-4 about-bottom-grid">
+								<img target="_blank" onclick="window.open('<%= pixiver.url %>')" src="../images/avator/<%= pixiver.avator %>" alt="" ></img>
+								<h4>No.0<%= pixiver.No%> ID <%= pixiver.id%></h4>
+								<label> </label>
+								<p>bookmarket:<%= pixiver.bookmarket%></p>
+								<p>follow:<%= pixiver.follow%></p>
+								<p>comment:<%= pixiver.comment%></p>
+							</div>
+						<%})%>
+
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--end-about-->
+	<!--start-gallery-->
+	<div class="gallery">
+		<div class="container">
+			<div class="gallery-top">
+				<h3>推荐作品</h3>
+			</div>
+			<div class="gallery-bottom">
+				 <ul id="flexiselDemo3">
+					 <%work.forEach(function(work){ %>
+						 <li>
+							 <img onclick="window.open('http://localhost:3000/images/worklist/<%= work.name %>')" src="images/worklist/<%= work.name%>" alt="">
+						 </li>
+					 <%})%>
+					 </ul>
+			</div>
+		</div>
+	</div>
+	<!--end-gallery-->
+	<!--Slider-Starts-Here-->
+				 <script type="text/javascript">
+					$(window).load(function() {
+
+						$("#flexiselDemo3").flexisel({
+							visibleItems: 3,
+							animationSpeed: 1000,
+							autoPlay: true,
+							autoPlaySpeed: 3000,
+							pauseOnHover: true,
+							enableResponsiveBreakpoints: true,
+							responsiveBreakpoints: {
+								portrait: {
+									changePoint:480,
+									visibleItems: 1
+								},
+								landscape: {
+									changePoint:640,
+									visibleItems: 2
+								},
+								tablet: {
+									changePoint:768,
+									visibleItems: 3
+								}
+							}
+						});
+
+					});
+				    </script>
+				    <script type="text/javascript" src="js/jquery.flexisel.js"></script>
+
+			<!--End-slider-script-->
+
+	<!--start-testimonial-->
+	<div class="testimonial">
+		<div class="container">
+			<div class="testimonial-top">
+				<h3>Terminal</h3>
+				    <div class="testimonial-bottom">
+						<div class="pxer-print" v-show="showAll ||['finish'].indexOf(state)!==-1">
+						    <div class="left pp-filter pxer-class-fieldset">
+							<form onsubmit="return false" id="downLoadForm" name="terminal">
+						        <div class="ppf-title pcf-title">过滤选项</div>
+						        <div class="ppf-form">
+						            <div class="form-group">
+						                <label>点赞数 ≥</label>
+						                <input id="praise" type="number" class="form-control" name="dianZhanShu" v-model.number="pxer.pfConfig.score" />
+						            </div>
+						            <div class="form-group">
+						                <label>浏览数 ≥</label>
+						                <input id="pageView" type="number" class="form-control" name="liuLanShu" v-model.number="pxer.pfConfig.view" />
+						            </div>
+						            <div class="form-group">
+						                <label>作者ID</label>
+						                <input id="pixiver" type="number" class="form-control" name="zuoZheID" v-model.number="pxer.pfConfig.avg" />
+						            </div>
+						            <div class="form-group">
+						                <label>作品中<strong>不能</strong>含有以下<strong>任意一个</strong>标签</label>
+						                <input id="no_tag_any" type="text" name="noAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
+						            </div>
+						            <div class="form-group">
+						                <label>作品中<strong>不能同时</strong>含有以下<strong>所有</strong>标签</label>
+						                <input id="no_tag_every" type="text" name="noAllLable" class="form-control" placeholder="可以有多个，空格分割" />
+						            </div>
+						            <div class="form-group">
+						                <label>作品中<strong>必须</strong>含有以下<strong>任意一个</strong>标签</label>
+						                <input id="has_tag_some" type="text" name="yesAnyLable" class="form-control" placeholder="可以有多个，空格分割" />
+						            </div>
+						            <div class="form-group">
+						                <label>作品中<strong>必须同时</strong>含有以下<strong>所有</strong>标签</label>
+						                <input id="has_tag_every" type="text" name="yesAllLable" class="form-control" placeholder="可以有多个，空格分割" />
+						            </div>
+						        </div>
+						    </div>
+
+						    <div class="right pp-print pxer-class-fieldset">
+						        <div class="ppp-title pcf-title">输出选项</div>
+						        <div class="ppp-form">
+						            <div class="form-group">
+						                <label>单张插画</label>
+						                <select class="form-control" name="singlePicture" v-model="pxer.ppConfig.illust_single">
+						                    <option value="600p">600p</option>
+						                    <option value="no">不输出</option>
+						                </select>
+						            </div>
+						            <div class="form-group">
+						                <label>多张插画</label>
+						                <select class="form-control" name="muchPicture" v-model="pxer.ppConfig.illust_multiple">
+						                    <option value="max">最大</option>
+						                    <option value="1200p">1200p</option>
+						                    <option value="cover_600p">仅封面（600p）</option>
+						                    <option value="no">不输出</option>
+						                </select>
+						            </div>
+						            <div class="form-group">
+						                <label>多张漫画</label>
+						                <select class="form-control" name="muchCartoon" v-model="pxer.ppConfig.manga_multiple">
+						                    <option value="max">最大</option>
+						                    <option value="1200p">1200p</option>
+						                    <option value="cover_600p">仅封面（600p）</option>
+						                    <option value="no">不输出</option>
+						                </select>
+						            </div>
+						            <div class="form-group">
+						                <label>动图</label>
+						                <select class="form-control" name="dynamicPicture" v-model="printConfigUgoira">
+						                    <option value="max-no">最大压缩包</option>
+						                    <option value="600p-no">600p压缩包</option>
+						                    <option value="max-yes">最大压缩包 + 参数</option>
+						                    <option value="600p-yes">600p压缩包 + 参数</option>
+						                    <option value="no-no">不输出</option>
+						                </select>
+						            </div>
+
+						            <div class="pppf-buttons">
+						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
+						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">Preview</button>
+										<button class="btn btn-outline-success" name="buttonAgain" id="Again" style="display:none">重试</button>
+						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">Download</button>
+
+										<button class="btn btn-outline-success break" name="buttonDownload" id="Break">Break</button>
+						            </div>
+												<p id="analysis" style="display: none;">正在解析</p>
+												<div class="pi-item" >
+													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
+														<table class="table">
+															<tr>
+																<td id="tasks">总任务数：</td>
+																<td ></td>
+															</tr>
+															<tr>
+																<td id="completed">已完成：</td>
+																<td ></td>
+															</tr>
+															<tr>
+																<td id="error">失败数：</td>
+																<td ></td>
+															</tr>
+													</table>
+												</div>
+						        </div>
+							</form>
+						    </div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+	<!--end function -->
+	<script>
+	$('#Download').on('click',function(){
+		var praise = $("#praise").val().trim() || 0;
+		var pageView = $('#pageView').val().trim() || 0;
+		var pixiver = $('#pixiver').val().trim();
+		var no_tag_any = $('#no_tag_any').val().trim();
+		var no_tag_every = $('#no_tag_every').val().trim();
+		var has_tag_some = $('#has_tag_some').val().trim();
+		var has_tag_every = $('#has_tag_every').val().trim();
+
+		$.ajax({
+			type:'post',
+			url:'/download',
+			data:{
+				'id':pixiver,
+                'tag':has_tag_every,
+                'praise':praise,
+                'pageView':pageView,
+                'no_tag_any':no_tag_any,
+                'no_tag_every':no_tag_every,
+                'has_tag_some':has_tag_some,
+                'has_tag_every':has_tag_every
+			},
+			success:function(data){
+				console.log(data);
+				window.open('http://localhost:3000/download');
+			},
+			error:function(err){
+				console.log('err');
+			}
+		});
+
+	})
+
+	</script>
+	<!--end-testimonial-->
+	<!--start-footer-->
+	<div class="footer">
+		<div class="container">
+			<div class="footer-main">
+				<div class="col-md-6 footer-left">
+					<a href="javascript:void(0);">
+					<h3>About~Us</h3>
+					</a>
+					<p>Address:<span>SiChuan University</span>
+					   <span>No.12 team</span></p>
+				</div>
+				<div class="col-md-6 footer-right">
+					<p>How to contact us?</p>
+					<div class="ftr">
+						<label style="color:white"><a href="https://github.com/regaliastar/project-Spider" target="_blank">@github.com</a></label>
+						<ul>
+							<li><a href="javascript:void(0);"><span class="sky"> </span></a></li>
+							<li><a href="javascript:void(0);"><span class="twit"> </span></a></li>
+							<li><a href="javascript:void(0);"><span class="fb"> </span></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="footer-bottom">
+				<p>Copyright &copy; 2017 <a href="https://github.com/regaliastar/project-Spider" target="_blank" >project-Spider team</a></p>
+			</div>
+		</div>
+		<script type="text/javascript">
+									$(document).ready(function() {
+										$().UItoTop({ easingType: 'easeOutQuart' });
+
+									});
+								</script>
+		<a href="#home" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+		<a href="#downLoadForm" id="toNext" class="scroll" style="display: block;">
+		<span id="toNextPage" style="opacity: 1;">
+		</span>
+		</a>
+	</div>
+	<script>
+	</script>
+	<!--end-footer-->
+</body>
+</html>
