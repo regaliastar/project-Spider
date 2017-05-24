@@ -106,9 +106,31 @@ download.on('close',function(completed,ready,err){
     console.log('完成：'+completed+' 等待：'+ready+' 错误：'+err);
 })*/
 
-var t ='';
-if(t){
-    console.log(1);
-}else {
-    console.log(2);
+var config = require('./../default.js');
+var mongoose = require('mongoose');
+mongoose.connect(config.mongodb);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  console.log("数据库成功开启");
+});
+
+var GetModel = require('./../lib/mongo');
+
+var BOOK = GetModel('Work');
+var word ='崩';
+
+var keywords = new RegExp(word,'i');
+var condition ={
+    tags: {$in: [keywords]}
+    //tags: {$in: keywords}
 }
+var query =BOOK.find(condition);
+query.limit(100);
+query.sort({praise:-1});
+
+query.exec(function(err,resultSet){
+    console.log(resultSet);
+    console.log('length: '+resultSet.length);
+    db.close();
+});

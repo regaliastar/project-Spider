@@ -39,6 +39,7 @@ $(document).ready(function(){
             success:function(data){
                 if(data['ok']){
                     clearInterval(roll);
+                    if(data['no'])  clearInterval(timer);
                     $("#Preview").attr("disabled",false);
                     $("#Download").attr("disabled",false);
                     $('.break').attr("disabled",true);

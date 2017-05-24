@@ -15,6 +15,7 @@
 <script type="text/javascript" src="js/move-top.js"></script>
 <script type="text/javascript" src="js/easing.js"></script>
 <script type="text/javascript" src="js/preview.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
 <script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$(".scroll").click(function(event){
@@ -30,6 +31,7 @@
 <script src="js/script.js"></script>
 <script src="js/index.js"></script>
 <!--end-count-->
+
 <style>
 body { min-height: 1500px ; }
 .pxer-app .pxer-class-fieldset {
@@ -65,6 +67,140 @@ body { min-height: 1500px ; }
 .break{
 
 }
+.nav-search-icon{
+	margin-right: 10px;
+}
+.c-searchbar-box .bt-search:focus, .c-searchbar-box .search-btn:hover {
+    background-color: #2277da;
+    color: #fff;
+
+}
+.c-searchbar-box .bt-search:focus::after, .c-searchbar-box .search-btn:hover::after {
+    border: 0 none;
+}
+.c-searchbar-box .search-btn::after {
+    border-left: 1px solid #ccc;
+    content: "";
+    height: 19px;
+    left: 0;
+    position: absolute;
+    top: 8px;
+    width: 0;
+}
+.c-searchbar {
+    background-color: #16171a;
+    left: 0;
+    padding: 15px 0;
+    position: absolute;
+    top: 95px;
+    width: 100%;
+    z-index: 99;
+}
+.c-searchbar {
+    box-sizing: border-box;
+    padding: 15px 10px;
+    z-index: 99;
+}
+.c-searchbar-inner {
+    margin: 0 auto;
+    max-width: 1200px;
+    min-width: 320px;
+    position: relative;
+}
+.c-searchbar-inner {
+    min-width: 300px;
+}
+.c-searchbar-box {
+    /*font-size: 0;*/
+
+    margin: 0 auto;
+    max-width: 620px;
+    position: relative;
+    text-align: center;
+    white-space: normal;
+}
+.c-searchbar-box .search-btn, .c-searchbar-box .search-ipt {
+    background-color: #fff;
+    border: 0 none;
+    box-sizing: border-box;
+    height: 35px;
+    vertical-align: middle;
+}
+.c-searchbar-box .search-ipt {
+    border-radius: 2px 0 0 2px;
+    padding: 5px;
+    width: 90%;
+}
+.c-searchbar-box .search-ipt:focus {
+    border: 0 none;
+    outline: 0 none;
+}
+.c-searchbar-box .search-btn {
+    border-radius: 0 2px 2px 0;
+    position: relative;
+    width: 10%;
+}
+.c-searchbar-box .bt-search:focus, .c-searchbar-box .search-btn:hover {
+    background-color: #2277da;
+    color: #fff;
+
+}
+.c-searchbar-box .bt-search:focus::after, .c-searchbar-box .search-btn:hover::after {
+    border: 0 none;
+}
+.c-searchbar-box .search-btn::after {
+    border-left: 1px solid #ccc;
+    content: "";
+    height: 19px;
+    left: 0;
+    position: absolute;
+    top: 8px;
+    width: 0;
+}
+.c-searchbar-box .nav-dropdown-mini {
+    margin-left: 0;
+    text-align: left;
+    width: 100%;
+}
+.gray{
+	/*-webkit-filter: grayscale(80%);*/
+	background-color: rgb(119, 119, 119);
+	opacity:0.8;
+	filter(alpha=80);
+}
+.light{
+	opacity:1;
+	filter(alpha=100);
+	background-color: rgb(255, 255, 255);
+}
+.black_overlay{
+	display:none;
+	position:absolute;
+	top:0%;
+	left:0%;
+	width:100%;
+	height:100%;
+	background-color:black;
+	z-index:1001;
+	-moz-opacity:0.8;
+	opacity:.80;
+	filter:alpha(opacity=80);
+}
+.white_content{
+	/*display:none;*/
+	position:absolute;
+	top:25%;left:25%;
+	width:50%;
+	height:50%;
+	padding:16px;
+	/*border:3px solid orange;*/
+	/*background-color:white;*/
+	z-index:1002;
+	overflow:auto;
+}
+.c-nav-search{
+	float: left;
+}
 </style>
 </head>
 
@@ -80,16 +216,36 @@ function moveToDownload(){
 <body>
 <!--start-banner-->
 	<div class="banner" id="home">
-			<div class="header">
+		<div id="fade" class="black_overlay">123</div>
+			/<div id="header" class="header" style="position:fixed; top:0%; left:0%; width:100%;">
 				<div class="container">
 					<div class="head">
 						<div class="header-left">
 							<a href="#"><h1>PixivHelper</h1></a>
 						</div>
 						<div class="header-right">
-							<p>contact us</p>
-							<p><a href="https://github.com/regaliastar/project-Spider" target="_blank">@github.com</a></p>
+							<div class="c-nav-search">
+							<a href="javascript:void;" aria-label="搜索" class="nav-search-btn" id="headerOpenSearchBtn">
+							<img src="images/glass.png" class="nav-search-icon"></img>
+							</a>
+							</div>
+							<div style="float:right">
+								<p>contact us</p>
+								<p><a href="https://github.com/regaliastar/project-Spider" target="_blank">@github.com</a></p>
+							</div>
 						</div>
+						<!-- 搜索框 start-->
+						<div class="light" id="searchBlank" style="display:none">
+							<div class="c-searchbar J-search-bar" style="display: block;">
+								<form action="/search" method="post" class="c-searchbar-inner" target="_blank">
+									<div class="c-searchbar-box" >
+									<input name="keywords" id="topbarSearchInput" class="search-ipt" placeholder="请输入您想搜索的作品 空格分隔" type="text"/>
+									<button type="submit" id="topbarSearchBtn" style="float: right;" class="btn search-btn" hotrep="hp.header.topbarSearchBtn">搜索</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- 搜索框 end-->
 						<div class="clearfix"></div>
 					</div>
 				</div>
@@ -272,15 +428,15 @@ function moveToDownload(){
 
 						            <div class="pppf-buttons">
 						                <p class="pppfb-msg" v-html="taskInfo" v-show="taskInfo"></p>
-						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">Preview</button>
+						                <button class="btn btn-outline-info" name="buttonPreview" id="Preview">执行爬虫</button>
 										<button class="btn btn-outline-success" name="buttonAgain" id="Again" style="display:none">重试</button>
-						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">Download</button>
+						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">直接获得</button>
 
-										<button class="btn btn-outline-success break" name="buttonDownload" id="Break">Break</button>
+										<button class="btn btn-outline-success break" name="buttonDownload" id="Break">中断</button>
 						            </div>
 												<p id="analysis" style="display: none;">正在解析</p>
-												<div class="pi-item" >
-													<div class="pii-title">执行进度(点击preview按钮后显示)</div>
+												<div class="pi-item" style="margin-top:30px">
+													<div class="pii-title">执行进度</div>
 														<table class="table">
 															<tr>
 																<td id="tasks">总任务数：</td>
@@ -342,11 +498,12 @@ function moveToDownload(){
 	</script>
 	<!--end-testimonial-->
 	<!--start-footer-->
+
 	<div class="footer">
 		<div class="container">
 			<div class="footer-main">
 				<div class="col-md-6 footer-left">
-					<a href="javascript:void(0);"><h3>Blinds</h3></a>
+					<a href="javascript:void(0);"><h3>About~Us</h3></a>
 					<p>Address:<span>SiChuan University</span>
 					   <span>No.12 team</span></p>
 				</div>
@@ -383,7 +540,38 @@ function moveToDownload(){
 									});
 								</script>
 		<a href="#home" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+		<a href="#downLoadForm" id="toNext" class="scroll" style="display: block;" onClick="change_pos()">
+		<span id="toNextPage" style="opacity: 1;">
+		</span>
 	</div>
 	<!--end-footer-->
+	<script>
+		var pos_home=0+home.offsetTop;
+		var pos_jinrituijian=0+jinrituijian.offsetTop;
+		var pos_tuijianzuoping=0+tuijianzuoping.offsetTop;
+		var pos_downLoadForm=0+downLoadForm.offsetTop;
+		var get_obj=document.getElementById('toNext');
+
+		function change_pos(){
+		var pos_now=0+$(document).scrollTop();
+		if(pos_now>=pos_home && pos_now<pos_jinrituijian)
+		{
+		get_obj.href="#jinrituijian";
+		}
+		if(pos_now>=pos_jinrituijian && pos_now<pos_tuijianzuoping)
+		{
+		get_obj.href="#tuijianzuoping";
+		}
+		if(pos_now>=pos_tuijianzuoping && pos_now<pos_downLoadForm)
+		{
+		get_obj.href="#downLoadForm";
+		}
+		if(pos_now>=pos_downLoadForm)
+		{
+		get_obj.href="#last";
+		}
+
+		}
+	</script>
 </body>
 </html>

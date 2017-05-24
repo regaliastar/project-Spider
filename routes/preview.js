@@ -144,7 +144,7 @@ router.post('/',function(req,res){
         res.send('ok');
     }else if (!req.body.id && !req.body.tag && req.body.post) {//表单未填写
         console.log(req.body);
-        res.send({'ok':true});
+        res.send({'ok':true,'no':true});
     }else {//发送近况
         console.log('else');
         res.send(req.session.preview);
