@@ -707,6 +707,19 @@ span.Minutes {
   text-indent: 100%;
   background: url(../images/up-arrow.png) no-repeat;
 }
+#toNext {
+  display: none;
+  text-decoration: none;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  overflow: hidden;
+  width: 50px;
+  height: 50px;
+  border: none;
+  text-indent: 100%;
+  background: url(../images/down-arrow.png) no-repeat;
+}
 /*--media-quaries-starts-here--*/
 @media (max-width: 1440px){
 .banner-bottom h2 {
@@ -1774,6 +1787,7 @@ span.Minutes {
   	height: 40px;
   	background-size: 100%;
 }
+
 .about {
   	padding: 1.3em 0px 2em 0px;
 }
