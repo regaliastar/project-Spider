@@ -211,7 +211,7 @@ function moveToDownload(){
 	</script>
 	<!--end-banner-->
 	<!--start-about-->
-	<div class="about">
+	<div class="about" id="jinrituijian">
 		<div class="container">
 			<div class="about-top">
 				<h3>今日推荐</h3>
@@ -243,7 +243,7 @@ function moveToDownload(){
 	</div>
 	<!--end-about-->
 	<!--start-gallery-->
-	<div class="gallery">
+	<div class="gallery" id="tuijianzuoping">
 		<div class="container">
 			<div class="gallery-top">
 				<h3>推荐作品</h3>
@@ -446,7 +446,7 @@ function moveToDownload(){
 	</script>
 	<!--end-testimonial-->
 	<!--start-footer-->
-	<div class="footer">
+	<div class="footer" id="last">
 		<div class="container">
 			<div class="footer-main">
 				<div class="col-md-6 footer-left">
@@ -480,13 +480,39 @@ function moveToDownload(){
 									});
 								</script>
 		<a href="#home" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
-		<a href="#downLoadForm" id="toNext" class="scroll" style="display: block;">
-		<span id="toNextPage" style="opacity: 1;">
+		<a href="#downLoadForm" id="toNext" class="scroll" style="display: block;" onClick="change_pos()">
+		<span id="toNextPage" style="opacity: 1;"> 
 		</span>
 		</a>
 	</div>
-	<script>
-	</script>
+<script>
+	var pos_home=0+home.offsetTop;
+	var pos_jinrituijian=0+jinrituijian.offsetTop;
+	var pos_tuijianzuoping=0+tuijianzuoping.offsetTop;      
+	var pos_downLoadForm=0+downLoadForm.offsetTop;
+	var get_obj=document.getElementById('toNext');
+	
+	function change_pos(){
+	var pos_now=0+$(document).scrollTop();
+	if(pos_now>=pos_home && pos_now<pos_jinrituijian)
+	{
+	get_obj.href="#jinrituijian";
+	}
+	if(pos_now>=pos_jinrituijian && pos_now<pos_tuijianzuoping)
+	{
+	get_obj.href="#tuijianzuoping";
+	}
+	if(pos_now>=pos_tuijianzuoping && pos_now<pos_downLoadForm)
+	{
+	get_obj.href="#downLoadForm";
+	}
+	if(pos_now>=pos_downLoadForm)
+	{
+	get_obj.href="#last";
+	}
+	
+	}
+</script>
 	<!--end-footer-->
 </body>
 </html>
