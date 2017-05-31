@@ -2,6 +2,7 @@ var express = require('express'),
     path = require('path'),
     Operator = require('./../lib/operator'),
     GetModel = require('./../lib/mongo'),
+    fs = require('fs'),
     Filter =require('./../spider/class/filter');
 
 var BOOK = GetModel('Work');
@@ -10,7 +11,7 @@ var router = express.Router();
 
 router.post('/',function(req,res){
     console.log('POST /download');
-    console.log(req.body);
+    //console.log(req.body);
     var praise =''+req.body.praise || '0';
     var pageView =''+req.body.pageView || '0';
     var pixiver =''+req.body.id || 0;
@@ -76,6 +77,36 @@ router.get('/',function(req,res,next){
     }else {
         next();
     }
-})
+});
+
+router.get('/works',function(req,res,next){
+    if(req.session.items){
+        res.render('download_works',{
+          group:req.session.group,    //表作品被分到哪一组
+          works:req.session.items,
+          number:req.session.items.length
+        });
+    }else {
+        next();
+    }
+});
+
+router.get('/works/:filename',function(req,res,next){
+    var filename = req.params.filename;
+	console.log('下载请求：'+filename);
+    var folder = req.session.group || 'db';
+	var filepath = path.join(__dirname,'../','public','images','download',folder,filename);
+	var stats = fs.statSync(filepath);
+	if(stats.isFile()){
+		res.set({
+			'Content-Type':'application/octet-stream',
+			'Content-Disposition': 'attachment; filename='+filename,
+   			'Content-Length': stats.size
+		});
+		fs.createReadStream(filepath).pipe(res);
+	}else{
+		res.end(404);
+	}
+});
 
 module.exports = router;

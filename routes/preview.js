@@ -1,6 +1,9 @@
 var express = require('express'),
     path = require('path'),
     Filter = require('./../spider/class/Filter'),
+    fs = require('fs'),
+    pinyin = require('./../middleware/pinyin'),
+    Download = require('./../spider/class/Download'),
     HTMLParser = require('./../spider/class/HTMLParser');
 
 var router = express.Router();
@@ -40,6 +43,7 @@ router.post('/',function(req,res){
 
     if(req.body.post && req.body.id){//搜画师
         req.session.preview ={};
+        req.session.group =pinyin.getFullChars(req.body.id);
         req.session.save();
         console.log('enter id');
         console.log(req.body);
@@ -67,6 +71,21 @@ router.post('/',function(req,res){
             req.session.items =items;
             req.session.preview.completed =completed;
             req.session.save();
+
+            var workname =work.small_address.substring(work.small_address.lastIndexOf('/')+1);
+            (function(url,workname,tag){
+                fs.exists('./public/images/download/'+tag+'/'+workname,function(exists){
+                    if(!exists){
+                        console.log('./public/images/download/'+tag+'/'+workname+'不存在');
+                        var download = new Download({path:'./public/images/download/'+tag});
+                        download.load(url);
+                        download.exec();
+                        download.on('close',function(){
+                            console.log(workname+'下载完成');
+                        });
+                    }
+                })
+            })(work.small_address,workname,req.session.group);
         });
         htmlParser.on('error',function(errUrl){
             error++;
@@ -91,6 +110,7 @@ router.post('/',function(req,res){
     }else if (req.body.post && req.body.tag) {//搜TAG
 
         req.session.preview ={};
+        req.session.group =pinyin.getFullChars(req.body.tag);
         req.session.save();
 
         console.log('enter tag');
@@ -117,10 +137,24 @@ router.post('/',function(req,res){
             //console.log('success');
             completed++;
             items.push(work);
-
             req.session.items =items;
             req.session.preview.completed =completed;
             req.session.save();
+
+            var workname =work.small_address.substring(work.small_address.lastIndexOf('/')+1);
+            (function(url,workname,tag){
+                fs.exists('./public/images/download/'+tag+'/'+workname,function(exists){
+                    if(!exists){
+                        console.log('./public/images/download/'+tag+'/'+workname+'不存在');
+                        var download = new Download({path:'./public/images/download/'+tag});
+                        download.load(url);
+                        download.exec();
+                        download.on('close',function(){
+                            console.log(workname+'下载完成');
+                        });
+                    }
+                })
+            })(work.small_address,workname,req.session.group);
         });
         htmlParser.on('error',function(errUrl){
             error++;
@@ -146,7 +180,7 @@ router.post('/',function(req,res){
         console.log(req.body);
         res.send({'ok':true,'no':true});
     }else {//发送近况
-        console.log('else');
+        //console.log('else');
         res.send(req.session.preview);
     }
 });
@@ -260,7 +294,7 @@ router.post('/again',function(req,res){
         }
 
     }else {
-        console.log('else');
+        //console.log('else');
         res.send(req.session.again);
     }
 
