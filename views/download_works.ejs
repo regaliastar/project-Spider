@@ -77,17 +77,17 @@ body { min-height: 1500px ; }
 						<div class="col-md-4 about-bottom-grid">
 							<span class="two active"> </span>
 							<h4>共计 <%= number%></h4>
-                            <h3 id="download_all">全部下载</h3>
+                            <a href="../download/works/output.tar.gz">全部下载</a>
 							<label> </label>
 							<p></p>
 						</div>
 						<%works.forEach(function(work){ %>
 							<div class="col-md-4 about-bottom-grid">
-								<img target="_blank" id="<%= work.workName %>" src="../images/download/<%= group%>/<%= work.workName %>" alt="" ></img>
+								<img style="top:20px" target="_blank" id="<%= work.praise %>" src="../images/download/<%= group%>/<%= work.workName %>" alt="" ></img>
 
 								<label> </label>
-								<p><a class="downloadable" href="../download/works/<%= work.workName %>">点赞数:<%= work.praise%></a></p>
-								<p>作者ID:<%= work.pixiver%></p>
+								<p><a  href="../download/works/<%= work.workName %>"><span class="<%= work.praise %>">点赞数:<%= work.praise%></span></a></p>
+								<p>作品ID:<%= work.workName%></p>
 
 							</div>
 						<%})%>

@@ -2,8 +2,11 @@ var express = require('express'),
     path = require('path'),
     Operator = require('./../lib/operator'),
     GetModel = require('./../lib/mongo'),
+    Filter =require('./../spider/class/filter'),
     fs = require('fs'),
-    Filter =require('./../spider/class/filter');
+    fstream = require('fstream'),
+    tar = require('tar'),
+    zlib = require('zlib');
 
 var BOOK = GetModel('Work');
 
@@ -81,6 +84,20 @@ router.get('/',function(req,res,next){
 
 router.get('/works',function(req,res,next){
     if(req.session.items){
+        var zip ='output.tar.gz';
+        var folder = req.session.group;
+        (function(zip,folder){
+            fs.exists('./public/images/download/'+folder+'/'+zip,function(exists){
+                if(!exists){
+                    console.log('压缩文件不存在');
+                    fstream.Reader({'path':'./public/images/download/'+folder,'type':'Directory'})
+    	               .pipe(tar.Pack())
+    	                  .pipe(zlib.Gzip())
+    	                     .pipe(fstream.Writer({'path':'./public/images/download/'+folder+'/'+zip}));
+                }
+            });
+        })(zip,folder);
+
         res.render('download_works',{
           group:req.session.group,    //表作品被分到哪一组
           works:req.session.items,
@@ -93,8 +110,9 @@ router.get('/works',function(req,res,next){
 
 router.get('/works/:filename',function(req,res,next){
     var filename = req.params.filename;
-	console.log('下载请求：'+filename);
-    var folder = req.session.group || 'db';
+	//console.log('下载请求：'+filename);
+    //var folder = req.session.group || 'db';
+    var folder = req.session.group;
 	var filepath = path.join(__dirname,'../','public','images','download',folder,filename);
 	var stats = fs.statSync(filepath);
 	if(stats.isFile()){
