@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>download</title>
-        <script src="js/jquery-1.11.0.min.js"></script>
-        <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
-    </head>
-    <body>
-        <div class="container">
-            <ul>
-              <p>//共计: <%=length %></p>
-              <p>//请将链接复制到迅雷等下载器进行下载</p>
-              <p>// <a style="color:red" href="../download/works" target="_blank">预览并下载</a></p>
-            </ul>
-            <ul>
-                <%items.forEach(function(item){ %>
-                    <li><%= item.big_address%>  <lable> //赞：<%= item.praise%> 作者：<%= item.pixiver%></lable></li>
-                <%})%>
-            </ul>
-        </div>
-    </body>
-</html>
+
+<pre>
+/**这个页面是抓取到的下载地址，你可以将他们复制到迅雷等下载器进行下载*/
+/**
+共计: <%=length %>
+*/
+<% if (db) { %>
+<% } else { %>
+<a style="color:red" href="../download/works" target="_blank"><h3>  /*我想要预览并打包下载*/</h3></a>
+<% } %>
+<%items.forEach(function(item){ %><% if (size == 'small') { %><%= item.small_address%><% } else { %><%= item.big_address%><% } %>
+<%})%>
+</pre>

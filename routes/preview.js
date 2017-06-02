@@ -39,6 +39,8 @@ router.post('/',function(req,res){
     filterCondition.no_tag_every =no_tag_every;
     filterCondition.no_tag_any =no_tag_any;
     req.session.filterCondition =filterCondition;
+
+    req.session.selectedSize = req.body.selectedSize;
     req.session.save();
 
     if(req.body.post && req.body.id){//搜画师
@@ -65,14 +67,9 @@ router.post('/',function(req,res){
             console.log(msg);
         });
         htmlParser.on('success',function(work){
-            console.log('success');
-            completed++;
-            items.push(work);
-            req.session.items =items;
-            req.session.preview.completed =completed;
-            req.session.save();
-
-            var workname =work.small_address.substring(work.small_address.lastIndexOf('/')+1);
+            //console.log('success');
+            var address = req.session.selectedSize == 'small'? work.small_address:work.big_address;
+            var workname =address.substring(address.lastIndexOf('/')+1);
             (function(url,workname,tag){
                 fs.exists('./public/images/download/'+tag+'/'+workname,function(exists){
                     if(!exists){
@@ -85,7 +82,13 @@ router.post('/',function(req,res){
                         });
                     }
                 })
-            })(work.small_address,workname,req.session.group);
+            })(address,workname,req.session.group);
+            work.workName = workname;
+            completed++;
+            items.push(work);
+            req.session.items =items;
+            req.session.preview.completed =completed;
+            req.session.save();
         });
         htmlParser.on('error',function(errUrl){
             error++;
@@ -135,13 +138,9 @@ router.post('/',function(req,res){
         });
         htmlParser.on('success',function(work){
             //console.log('success');
-            completed++;
-            items.push(work);
-            req.session.items =items;
-            req.session.preview.completed =completed;
-            req.session.save();
-
-            var workname =work.small_address.substring(work.small_address.lastIndexOf('/')+1);
+            var address = req.session.selectedSize == 'small'? work.small_address:work.big_address;
+            var workname =address.substring(address.lastIndexOf('/')+1);
+            work.workName = workname;
             (function(url,workname,tag){
                 fs.exists('./public/images/download/'+tag+'/'+workname,function(exists){
                     if(!exists){
@@ -154,7 +153,12 @@ router.post('/',function(req,res){
                         });
                     }
                 })
-            })(work.small_address,workname,req.session.group);
+            })(address,workname,req.session.group);
+            completed++;
+            items.push(work);
+            req.session.items =items;
+            req.session.preview.completed =completed;
+            req.session.save();
         });
         htmlParser.on('error',function(errUrl){
             error++;
@@ -192,8 +196,10 @@ router.get('/',function(req,res,next){
             return b.praise - a.praise;
         });
         res.render('download',{
-          items:items,
-          length:items.length
+            size:req.session.size || 'big',
+            db:false,
+            items:items,
+            length:items.length
         });
         res.end();
     }else {
@@ -220,8 +226,10 @@ router.get('/break',function(req,res,next){
             return b.praise - a.praise;
         });
         res.render('download',{
-          items:items,
-          length:items.length
+            size:req.session.size || 'big',
+            db:false,
+            items:items,
+            length:items.length
         });
 
         res.end();

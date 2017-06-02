@@ -14,6 +14,7 @@ $(document).ready(function(){
         var no_tag_every = $('#no_tag_every').val().trim();
         var has_tag_some = $('#has_tag_some').val().trim();
         var has_tag_every = $('#has_tag_every').val().trim();
+        var selectedSize = $("#singlePicture option:selected").val();
 
         var time =0;
         var timer =setInterval(function(){
@@ -34,7 +35,8 @@ $(document).ready(function(){
                 'no_tag_any':no_tag_any,
                 'no_tag_every':no_tag_every,
                 'has_tag_some':has_tag_some,
-                'has_tag_every':has_tag_every
+                'has_tag_every':has_tag_every,
+                'selectedSize':selectedSize
             },
             success:function(data){
                 if(data['ok']){

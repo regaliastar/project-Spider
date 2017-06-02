@@ -26,6 +26,8 @@ router.use('/',function(req,res){
       console.log('length: '+resultSet.length);
 
       res.render('download',{
+          size:'big',
+          db:true,
           items:resultSet,
           length:resultSet.length
       })

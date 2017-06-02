@@ -14,7 +14,9 @@ var router = express.Router();
 
 router.post('/',function(req,res){
     console.log('POST /download');
-    //console.log(req.body);
+    console.log(req.body);
+    req.session.selectedSize = req.body.selectedSize;
+    req.session.save();
     var praise =''+req.body.praise || '0';
     var pageView =''+req.body.pageView || '0';
     var pixiver =''+req.body.id || 0;
@@ -72,10 +74,13 @@ router.post('/',function(req,res){
 });
 
 router.get('/',function(req,res,next){
+
     if(req.session.items){
         res.render('download',{
-          items:req.session.items,
-          length:req.session.items.length
+            size:req.session.selectedSize || 'small',
+            db:true,
+            items:req.session.items,
+            length:req.session.items.length
         });
     }else {
         next();
@@ -90,18 +95,29 @@ router.get('/works',function(req,res,next){
             fs.exists('./public/images/download/'+folder+'/'+zip,function(exists){
                 if(!exists){
                     console.log('压缩文件不存在');
-                    fstream.Reader({'path':'./public/images/download/'+folder,'type':'Directory'})
-    	               .pipe(tar.Pack())
-    	                  .pipe(zlib.Gzip())
-    	                     .pipe(fstream.Writer({'path':'./public/images/download/'+folder+'/'+zip}));
+                    try {
+                        fstream.Reader({'path':'./public/images/download/'+folder,'type':'Directory'})
+        	               .pipe(tar.Pack())
+        	                  .pipe(zlib.Gzip())
+        	                     .pipe(fstream.Writer({'path':'./public/images/download/'+folder+'/'+zip}))
+                                    .on('close',function(){console.log('压缩完毕')});
+                    } catch (e) {
+                        console.log(e);
+                    } finally {
+
+                    }
+
                 }
             });
         })(zip,folder);
-
+        var items =req.session.items;
+        items.sort(function(a,b){
+            return b.praise - a.praise;
+        });
         res.render('download_works',{
           group:req.session.group,    //表作品被分到哪一组
-          works:req.session.items,
-          number:req.session.items.length
+          works:items,
+          number:items.length
         });
     }else {
         next();
@@ -121,7 +137,10 @@ router.get('/works/:filename',function(req,res,next){
 			'Content-Disposition': 'attachment; filename='+filename,
    			'Content-Length': stats.size
 		});
-		fs.createReadStream(filepath).pipe(res);
+		fs.createReadStream(filepath).pipe(res).on('error',function(err){
+            console.log('下载错误');
+            console.log(err);
+        });
 	}else{
 		res.end(404);
 	}

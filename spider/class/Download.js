@@ -135,7 +135,7 @@ Download.prototype['exec'] = function(){
                              /**
                               * 发射错误事件
                               */
-                             _self.emit('error',url+' 无法解析');
+                             _self.emit('error',url);
                              if(_self.ready ===0){
                                  _self.emit('close',_self.completed,_self.ready,_self.error);
                              }

@@ -392,9 +392,9 @@ function moveToDownload(){
 						        <div class="ppp-form">
 						            <div class="form-group">
 						                <label>单张插画</label>
-						                <select class="form-control" name="singlePicture" v-model="pxer.ppConfig.illust_single">
-						                    <option value="600p">600p</option>
-						                    <option value="no">不输出</option>
+						                <select class="form-control" id="singlePicture" v-model="pxer.ppConfig.illust_single">
+						                    <option value="small">缩略图</option>
+						                    <option value="big">原图</option>
 						                </select>
 						            </div>
 						            <div class="form-group">
@@ -470,7 +470,7 @@ function moveToDownload(){
 		var no_tag_every = $('#no_tag_every').val().trim();
 		var has_tag_some = $('#has_tag_some').val().trim();
 		var has_tag_every = $('#has_tag_every').val().trim();
-
+		var selectedSize = $("#singlePicture option:selected").val();
 		$.ajax({
 			type:'post',
 			url:'/download',
@@ -482,7 +482,8 @@ function moveToDownload(){
                 'no_tag_any':no_tag_any,
                 'no_tag_every':no_tag_every,
                 'has_tag_some':has_tag_some,
-                'has_tag_every':has_tag_every
+                'has_tag_every':has_tag_every,
+				'selectedSize':selectedSize
 			},
 			success:function(data){
 				console.log(data);
