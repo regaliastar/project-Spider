@@ -53,13 +53,11 @@ project-Spider
 	1. 搜索：`POST /search/:keyword=???`
 3. 下载
 	1. 下载：`POST /download`
-	2. 预览: `GET /download`
 4. 爬取
 	1. 发送请求：`POST /preview`
 	2. 预览：`GET /preview`
-	3. 中断：`POST /preview/break`
-	4. 中断页面：`GET /preview/break`
-	5. 重试：`POST /preview/again`
+	3. 中断页面：`GET /preview/break`
+	4. 重试：`POST /preview/again`
 
 > 路由设计采用`REST`风格
 

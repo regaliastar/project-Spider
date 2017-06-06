@@ -46,14 +46,14 @@ body { min-height: 1500px ; }
   top: -0.75em;
   left: 0.45em;
   font-size: 16px; }
-  .pxer-app .pxer-print .pp-filter {
+.pxer-app .pxer-print .pp-filter {
 	width: 45% !important; }
-	.pxer-app .pxer-print .pp-filter, .pxer-app .pxer-print .pp-print {
+.pxer-app .pxer-print .pp-filter, .pxer-app .pxer-print .pp-print {
   margin-top: 1.5em;
   padding: 12px; }
 .pxer-app .pxer-print .pp-print {
   width: 35%; }
-  .pxer-app .pxer-print .pp-print .pppf-buttons {
+.pxer-app .pxer-print .pp-print .pppf-buttons {
 	text-align: right; }
 
 .left{
@@ -416,13 +416,13 @@ function moveToDownload(){
 						                </select>
 						            </div>
 						            <div class="form-group">
-						                <label>动图</label>
+						                <label>线程数(建议查询过大时选择)</label>
 						                <select class="form-control" name="dynamicPicture" v-model="printConfigUgoira">
-						                    <option value="max-no">最大压缩包</option>
-						                    <option value="600p-no">600p压缩包</option>
-						                    <option value="max-yes">最大压缩包 + 参数</option>
-						                    <option value="600p-yes">600p压缩包 + 参数</option>
-						                    <option value="no-no">不输出</option>
+						                    <option value="3">3</option>
+						                    <option value="5">5</option>
+						                    <option value="7">7</option>
+						                    <option value="9">9</option>
+						                    <option value="11">11</option>
 						                </select>
 						            </div>
 
@@ -432,7 +432,7 @@ function moveToDownload(){
 										<button class="btn btn-outline-success" name="buttonAgain" id="Again" style="display:none">重试</button>
 						                <button class="btn btn-outline-success" name="buttonDownload" id="Download">直接获得</button>
 
-										<button class="btn btn-outline-success break" name="buttonDownload" id="Break">中断</button>
+
 						            </div>
 												<p id="analysis" style="display: none;">正在解析</p>
 												<div class="pi-item" style="margin-top:30px">
@@ -454,6 +454,10 @@ function moveToDownload(){
 												</div>
 						        </div>
 							</form>
+
+							<form class="" action="/preview/break" method="get">
+								<button type="subm" class="btn btn-outline-success break" name="buttonDownload" id="Break">中断</button>
+							</form>
 						    </div>
 						</div>
 					</div>
@@ -462,6 +466,29 @@ function moveToDownload(){
 	</div>
 	<!--end function -->
 	<script>
+	var postcall = function( url, params, target){
+		var tempform = document.createElement("form");
+		tempform.action = url;
+		tempform.method = "post";
+		tempform.style.display="none"
+		if(target) {
+			tempform.target = target;
+		}
+
+		for (var x in params) {
+			var opt = document.createElement("input");
+			opt.name = x;
+			opt.value = params[x];
+			tempform.appendChild(opt);
+		}
+
+		var opt = document.createElement("input");
+		opt.type = "submit";
+		tempform.appendChild(opt);
+		document.body.appendChild(tempform);
+		tempform.submit();
+		document.body.removeChild(tempform);
+	}
 	$('#Download').on('click',function(){
 		var praise = $("#praise").val().trim() || 0;
 		var pageView = $('#pageView').val().trim() || 0;
@@ -471,29 +498,17 @@ function moveToDownload(){
 		var has_tag_some = $('#has_tag_some').val().trim();
 		var has_tag_every = $('#has_tag_every').val().trim();
 		var selectedSize = $("#singlePicture option:selected").val();
-		$.ajax({
-			type:'post',
-			url:'/download',
-			data:{
-				'id':pixiver,
-                'tag':has_tag_every,
-                'praise':praise,
-                'pageView':pageView,
-                'no_tag_any':no_tag_any,
-                'no_tag_every':no_tag_every,
-                'has_tag_some':has_tag_some,
-                'has_tag_every':has_tag_every,
-				'selectedSize':selectedSize
-			},
-			success:function(data){
-				console.log(data);
-				window.open('http://localhost:3000/download');
-			},
-			error:function(err){
-				console.log('err');
-			}
-		});
-
+		postcall('/download',{
+			'id':pixiver,
+			'tag':has_tag_every,
+			'praise':praise,
+			'pageView':pageView,
+			'no_tag_any':no_tag_any,
+			'no_tag_every':no_tag_every,
+			'has_tag_some':has_tag_some,
+			'has_tag_every':has_tag_every,
+			'selectedSize':selectedSize
+		},'_blank');
 	})
 
 	</script>

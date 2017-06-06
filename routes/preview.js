@@ -67,7 +67,6 @@ router.post('/',function(req,res){
             console.log(msg);
         });
         htmlParser.on('success',function(work){
-            //console.log('success');
             var address = req.session.selectedSize == 'small'? work.small_address:work.big_address;
             var workname =address.substring(address.lastIndexOf('/')+1);
             (function(url,workname,tag){
@@ -206,15 +205,15 @@ router.get('/',function(req,res,next){
         next();
     }
 });
-
+/*
 router.post('/break',function(req,res,next){
     console.log('POST /preview/break');
     res.send('ok');
-    /*req.session.destroy(function(err){
-        if(err) console.log(err);
-    });*/
+    //req.session.destroy(function(err){
+        //if(err) console.log(err);
+    //});
 
-});
+});*/
 
 router.get('/break',function(req,res,next){
     if(req.session.items){

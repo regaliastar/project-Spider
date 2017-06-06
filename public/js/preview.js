@@ -94,7 +94,9 @@ $(document).ready(function(){
     });
 
     $('#Break').on('click',function(){
-        $.ajax({
+        $("#Preview").attr("disabled",false);
+        $("#Download").attr("disabled",false);
+        /*$.ajax({
             type:'post',
             url:'/preview/break',
             data:{},
@@ -107,7 +109,7 @@ $(document).ready(function(){
             error:function(err){
                 console.log(err);
             }
-        })
+        })*/
     });
 
     $('#Again').on('click',function(){

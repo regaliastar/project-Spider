@@ -42,19 +42,27 @@ router.post('/',function(req,res){
     }
 
     var filterCondition ={
-      "has_tag_every":has_tag_every,
+      //"has_tag_every":has_tag_every,
       "has_tag_some":has_tag_some,
       "no_tag_any":no_tag_any,
       "no_tag_every":no_tag_every
     }
     var filter = new Filter(filterCondition);
     //console.log('filterCondition: '+JSON.stringify(filterCondition));
+    var reg_keywords =[];
+    has_tag_every.map(function(item){
+        let t = new RegExp(item,'i');
+        reg_keywords.push(t);
+    })
     var condition ={
       'praise': {$gte:praise},
       'pageView': {$gte:pageView}
     }
+    if(has_tag_every && has_tag_every.length !== 0){
+        condition =Object.assign(condition,{tags: {$in: reg_keywords}});
+    }
     if(pixiver){
-      condition =Object.assign(condition,{'pixiver':pixiver});
+        condition =Object.assign(condition,{'pixiver':pixiver});
     }
     console.log('condition: '+JSON.stringify(condition));
     var query =BOOK.find(condition);
@@ -64,28 +72,19 @@ router.post('/',function(req,res){
 
     query.exec(function(err,resultSet){
       console.log('length: '+resultSet.length);
-      resultSet =filter.filter(resultSet);
-      req.session.items =resultSet;
-      req.session.save();
-      res.end('ok');
+      //resultSet =filter.filter(resultSet);
+
+      res.render('download',{
+          size:req.session.selectedSize || 'small',
+          db:true,
+          items:resultSet,
+          length:resultSet.length
+      });
 
     });
 
 });
 
-router.get('/',function(req,res,next){
-
-    if(req.session.items){
-        res.render('download',{
-            size:req.session.selectedSize || 'small',
-            db:true,
-            items:req.session.items,
-            length:req.session.items.length
-        });
-    }else {
-        next();
-    }
-});
 
 router.get('/works',function(req,res,next){
     if(req.session.items){
