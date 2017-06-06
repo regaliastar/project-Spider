@@ -8,7 +8,6 @@ var express = require('express'),
 
 var router = express.Router();
 
-
 router.post('/',function(req,res){
 
     var filterCondition ={};
@@ -34,7 +33,7 @@ router.post('/',function(req,res){
     }else {
       var no_tag_every =[];
     }
-    filterCondition.has_tag_every =has_tag_every;
+    //filterCondition.has_tag_every =has_tag_every;
     filterCondition.has_tag_some =has_tag_some;
     filterCondition.no_tag_every =no_tag_every;
     filterCondition.no_tag_any =no_tag_any;
@@ -172,6 +171,7 @@ router.post('/',function(req,res){
         htmlParser.once('close',function(){
             console.log('close');
             items =filter.filter(items);
+            console.log('共有：'+items.length);
             req.session.items =items;
             req.session.preview.ok =true;
             req.session.save();
@@ -202,6 +202,7 @@ router.get('/',function(req,res,next){
         });
         res.end();
     }else {
+        console.log('preview else');
         next();
     }
 });

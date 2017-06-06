@@ -202,14 +202,8 @@ db.once('open', function (callback) {
 
 
 var GetModel = require('./../lib/mongo');
-var BOOK = GetModel('Pixiver');
+var PixiverModel = GetModel('Pixiver');
 var WorkModel = GetModel('Work');
-
-var condition ={
-    'praise': {$gte:1000},
-    'pageView': {$gte:1000}
-};
-
 
 /*
 var query =WorkModel.find(condition);
@@ -247,21 +241,32 @@ BOOK.find({'bookmarket':{$gte:1}},function(err,items){
         console.log(err);
     }
 });*/
-var praise='1000';
-var pageView = '0';
+var q1 =PixiverModel.find({id:'1184799'});
+q1.exec(function(err,resultSet){
+    console.log('pixiverlength: '+resultSet.length);
+    console.log(resultSet[0]);
+    //db.close();
+});
+
+var query =WorkModel.find();
+//query.limit(100);
+//query.sort({praise:-1});
+query.exec(function(err,resultSet){
+    console.log('worklength: '+resultSet.length);
+    console.log(resultSet[0]);
+    //db.close();
+});
+
 var condition ={
-  'praise': {$gte:praise},
-  'pageView': {$gte:pageView}
+  //'follow': {$gte:1908}
+  //'follow':14023
 }
 
-var query =WorkModel.find(condition);
-query.limit(100);
-query.sort({praise:-1});
-query.exec(function(err,resultSet){
-    console.log('length: '+resultSet.length);
-    console.log(resultSet[0]);
-    db.close();
-});
+var Operator =require('./../lib/operator');
+var opp = new Operator({'schema':'Pixiver'});
+opp.remove(condition,function(items){
+  console.log('p over :'+items.length);
+})
 /*
 WorkModel.find({'pageView':{$gte:0}},function(err,items){
     if(!err){

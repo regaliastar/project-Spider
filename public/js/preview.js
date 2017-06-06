@@ -96,20 +96,6 @@ $(document).ready(function(){
     $('#Break').on('click',function(){
         $("#Preview").attr("disabled",false);
         $("#Download").attr("disabled",false);
-        /*$.ajax({
-            type:'post',
-            url:'/preview/break',
-            data:{},
-            success:function(data){
-
-                $("#Preview").attr("disabled",false);
-                $("#Download").attr("disabled",false);
-                window.open('http://localhost:3000/preview/break');
-            },
-            error:function(err){
-                console.log(err);
-            }
-        })*/
     });
 
     $('#Again').on('click',function(){
